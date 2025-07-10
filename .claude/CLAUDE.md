@@ -14,8 +14,9 @@ This is an **AI-native Revenue Cycle Management (RCM) platform** built on AWS Am
 - LLM feedback loops for continuous improvement
 
 **Technology Stack:**
-- **Frontend**: Next.js 14 (SSR) with TypeScript on Amplify
-- **Backend**: Python Lambda agents with AWS CDK infrastructure
+- **Frontend/Backend**: Next.js 14 (SSR, App Router) with TypeScript on Amplify
+- **App Logic**: Server Actions + minimal API routes for uploads
+- **Agents**: Python Lambda agents with AWS CDK infrastructure
 - **Database**: RDS (PostgreSQL) + S3 for PHI-safe storage
 - **AI/ML**: AWS Bedrock (Nova Pro) for LLM inference
 - **Integration**: EventBridge, Step Functions, API Gateway
@@ -23,35 +24,45 @@ This is an **AI-native Revenue Cycle Management (RCM) platform** built on AWS Am
 ## High-Level Architecture
 
 ```
-Frontend (Next.js on Amplify) ──────────────────────────────────┐
-                                        │
-                          API Routes (/api/* in Next.js SSR)
-                                        │
-External systems ──▶ API Gateway (webhooks) ▶ Webhook Lambdas (e.g. Claim.MD)
-                                        │
-                               EventBridge / Step Functions
-                                        │
-                        CDK-Deployed Lambda Agents (Python)
-                                        │
-                    RDS (Postgres) + S3 (PHI-safe buckets)
-                                        │
-                        Bedrock API (Nova Pro) for LLM inference
+Frontend (Next.js App Router on Amplify) ─────────────────────────────┐
+                                             │
+                       App Router (UI) ──────┘
+                       Server Actions (backend logic in-app)
+                             │
+                       AWS SDK → Agent Lambda invocation
+                             │
+External systems ──▶ API Gateway (webhooks) ▶ Webhook Lambdas
+                             │
+                    EventBridge / Step Functions (chained agents)
+                             │
+                   CDK-Deployed Python Lambda Agents (stateless)
+                             │
+                 RDS (Postgres) + S3 (PHI-safe buckets)
+                             │
+                     Bedrock API (Nova Pro) for LLM inference
 ```
 
 ## Design Principles
 
 ### 1. Agent-Native Microservices
 - Each RCM function is implemented as an isolated **Python** Lambda agent
+- App-triggered Lambdas (e.g. `SubmitClaimAgent`) invoked from Server Actions
+- Webhook Lambdas (e.g. `ERAParserAgent`) invoked via API Gateway
 - No persistent state in agents - all outputs stored in `agent_runs` and/or RDS/S3
-- Examples: `CodingAgent`, `ERAParserAgent`, `SubmitClaimAgent`
 
-### 2. Infrastructure Standards
-- All Lambdas live in private VPC with encrypted subnets
+### 2. Full-Stack App-Local Logic
+- App Router handles all frontend + backend logic together:
+  - SSR and client views
+  - `server-only` functions for secure backend logic
+  - Server Actions handle calling agents using the AWS SDK
+
+### 3. Infrastructure Standards
+- All Lambdas run in private VPC with encrypted subnets
 - Each agent has its own IAM role with minimal scope
 - CloudWatch logging + agent execution logged to RDS
 - All external APIs (Bedrock, Claim.MD) called from within agents only
 
-### 3. Security & HIPAA Compliance
+### 4. Security & HIPAA Compliance
 - Encrypted private subnets for all services
 - S3 encrypted, versioned, access-logged
 - RDS encrypted with password rotation
@@ -80,52 +91,50 @@ External systems ──▶ API Gateway (webhooks) ▶ Webhook Lambdas (e.g. Clai
 
 ```
 /                       ← monorepo root
+├── app/                ← Next.js App Router frontend + backend (TS)
+│   ├── app/            ← UI routes, layouts, Server Actions
+│   └── lib/            ← DB, session, AWS SDK logic
+├── agents/             ← Python-based Lambdas (one folder per agent)
+│   └── CodingAgent/
+│       ├── handler.py
+│       ├── prompt.py
+│       └── schema.py
+├── infra/              ← CDK (TypeScript) for VPC, IAM, API GW, Lambda
+│   └── lib/            ← CDK stack definitions
+├── schemas/            ← JSON schemas (I/O contracts)
+├── scripts/            ← Agent test runners, bootstrap scripts
+├── .github/workflows/  ← CI/CD: Amplify + CDK deploy
 ├── amplify/            ← Amplify-managed backend (auth, storage, APIs)
 │   ├── backend.ts      ← Amplify backend definition
 │   ├── data/resource.ts ← GraphQL schema and data configuration
 │   └── auth/resource.ts ← Authentication configuration
-├── app/                ← Next.js app from amplify-next-template (TS)
-│   ├── pages/api/      ← API routes triggered from app
-│   ├── page.tsx        ← Main application component
-│   └── layout.tsx      ← Root layout
-├── agents/             ← One folder per Python-based Lambda agent
-│   ├── CodingAgent/
-│   │   ├── handler.py
-│   │   ├── prompt.py
-│   │   └── schema.py
-│   ├── ERAParserAgent/
-│   ├── SubmitClaimAgent/
-│   └── EligibilityAgent/
-├── infra/              ← CDK app (TypeScript) for agents, RDS, S3, VPC, IAM
-│   └── lib/            ← Stack definitions per infra domain
-├── schemas/            ← JSON schemas for agents and API I/O contracts
-├── scripts/            ← Test runners, local harness tools
-├── .github/workflows/  ← CI/CD: CDK deploy, Lambda build + package
 ├── amplify_outputs.json ← Generated Amplify configuration (auto-generated)
 └── README.md
 ```
 
-## API Structure
+## API + Execution Structure
 
-### Internal App Routes (`/app/pages/api/*`)
-Each route performs input validation and invokes Lambda agents:
+### Internal App Logic (App Router Server Actions)
+Server Actions replace most API routes and invoke Lambda agents via AWS SDK:
 
-| Route                    | Purpose                | Agent Triggered         |
+| Server Action            | Purpose                | Agent Triggered         |
 | ------------------------ | ---------------------- | ----------------------- |
-| `/api/submit-claim`      | Trigger 837 submission | `SubmitClaimAgent`      |
-| `/api/check-eligibility` | Run 270/271 query      | `EligibilityAgent`      |
-| `/api/generate-appeal`   | Draft appeal letter    | `AppealLetterAgent`     |
-| `/api/post-remit`        | Ingest uploaded 835    | `ERAParserAgent`        |
-| `/api/estimate-cost`     | Predict patient OOP    | `PatientEstimatorAgent` |
+| `submitClaim()`          | Trigger 837 submission | `SubmitClaimAgent`      |
+| `checkEligibility()`     | Run 270/271 query      | `EligibilityAgent`      |
+| `generateAppeal()`       | Draft appeal letter    | `AppealLetterAgent`     |
+| `estimatePatientCost()`  | Predict patient OOP    | `PatientEstimatorAgent` |
+
+**Minimal API Routes (uploads only):**
+- `/api/upload-era` - Handle 835 file uploads, then call `ERAParserAgent`
 
 ### External Webhook Endpoints (API Gateway)
 Third-party systems hit these endpoints:
 
-| Webhook Path              | Source          | Handler Lambda          |
-| ------------------------- | --------------- | ----------------------- |
-| `POST /webhook/era`       | Claim.MD (835)  | `ERAParserAgent`        |
-| `POST /webhook/denial`    | Claim.MD (277)  | `DenialClassifierAgent` |
-| `POST /webhook/chartdrop` | EHR / 1upHealth | Triggers `CodingAgent`  |
+| Webhook Route            | Source          | Handler Lambda          |
+| ------------------------ | --------------- | ----------------------- |
+| `POST /webhook/era`      | Claim.MD (835)  | `ERAParserAgent`        |
+| `POST /webhook/denial`   | Claim.MD (277)  | `DenialClassifierAgent` |
+| `POST /webhook/chart`    | EHR / 1upHealth | Triggers `CodingAgent`  |
 
 ## Common Development Commands
 
@@ -176,26 +185,43 @@ client.models.Claim.create({
 });
 ```
 
-### Agent Invocation from Frontend
-API routes invoke Python Lambda agents:
+### Server Action Example
+Server Actions invoke Python Lambda agents via AWS SDK:
 
 ```typescript
-// /app/pages/api/submit-claim.ts
+// /app/lib/actions.ts
+'use server';
+
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function submitClaim(claimId: string, patientData: any) {
   const lambda = new LambdaClient({ region: process.env.AWS_REGION });
   
   const command = new InvokeCommand({
     FunctionName: "SubmitClaimAgent",
     Payload: JSON.stringify({
-      claimId: req.body.claimId,
-      patientData: req.body.patientData
+      claimId,
+      patientData
     })
   });
   
   const response = await lambda.send(command);
-  res.json(JSON.parse(response.Payload?.toString() || "{}"));
+  return JSON.parse(response.Payload?.toString() || "{}");
+}
+```
+
+### Using Server Actions in Components
+```typescript
+// /app/claims/page.tsx
+import { submitClaim } from '@/lib/actions';
+
+export default function ClaimsPage() {
+  return (
+    <form action={submitClaim}>
+      <input name="claimId" placeholder="Claim ID" />
+      <button type="submit">Submit Claim</button>
+    </form>
+  );
 }
 ```
 

@@ -9,8 +9,9 @@ This document contains the complete architectural, technical, and operational de
 * **Codebase:** Monorepo using the [`aws-samples/amplify-next-template`](https://github.com/aws-samples/amplify-next-template) as base:
 
   * Amplify-managed hosting + Cognito auth
-  * Next.js (SSR) frontend (TypeScript)
-  * Agent Lambdas (Python)
+  * Next.js (SSR, App Router) frontend (TypeScript)
+  * App-local server actions + minimal API routes
+  * Agent Lambdas (Python, CDK-managed)
   * Infrastructure (AWS CDK in TypeScript)
 
 ---
@@ -18,19 +19,22 @@ This document contains the complete architectural, technical, and operational de
 ## 🛡️ High-Level Architecture
 
 ```
-Frontend (Next.js on Amplify) ──────────────────────────────────┐
-                                        │
-                          API Routes (/api/* in Next.js SSR)
-                                        │
-External systems ──▶ API Gateway (webhooks) ▶ Webhook Lambdas (e.g. Claim.MD)
-                                        │
-                               EventBridge / Step Functions
-                                        │
-                        CDK-Deployed Lambda Agents (Python)
-                                        │
-                    RDS (Postgres) + S3 (PHI-safe buckets)
-                                        │
-                        Bedrock API (Nova Pro) for LLM inference
+Frontend (Next.js App Router on Amplify) ─────────────────────────────┐
+                                             │
+                       App Router (UI) ──────┘
+                       Server Actions (backend logic in-app)
+                             │
+                       AWS SDK → Agent Lambda invocation
+                             │
+External systems ──▶ API Gateway (webhooks) ▶ Webhook Lambdas
+                             │
+                    EventBridge / Step Functions (chained agents)
+                             │
+                   CDK-Deployed Python Lambda Agents (stateless)
+                             │
+                 RDS (Postgres) + S3 (PHI-safe buckets)
+                             │
+                     Bedrock API (Nova Pro) for LLM inference
 ```
 
 ---
@@ -40,53 +44,58 @@ External systems ──▶ API Gateway (webhooks) ▶ Webhook Lambdas (e.g. Clai
 ### 1. Agent-Native Microservices
 
 * Each RCM function is implemented as its own isolated **Python** Lambda (e.g. `CodingAgent`, `ERAParserAgent`).
-* No persistent state in agents. All outputs are stored in `agent_runs` and/or written to RDS/S3.
+* App-triggered Lambdas (e.g. `SubmitClaimAgent`) are invoked from Server Actions in the frontend repo.
+* Webhook Lambdas (e.g. `ERAParserAgent`) are invoked via API Gateway.
 
-### 2. Infrastructure Standards
+### 2. Full-Stack App-Local Logic
 
-* All Lambdas live in a private VPC.
-* Each agent has its own IAM role with minimal scope.
-* Logs are streamed to CloudWatch + agent execution is logged to RDS.
-* All external APIs (e.g. Bedrock, Claim.MD) are called from within agents only.
+* App Router handles all frontend + backend logic together:
 
-### 3. DevOps & Observability
+  * SSR and client views
+  * `server-only` functions for secure backend logic
+  * Server Actions handle calling agents using the AWS SDK
 
-* CDK (in TypeScript) manages all infrastructure (networking, compute, storage, IAM, secrets).
-* GitHub Actions deploys agents, CDK stacks, and frontend via Amplify.
-* All schema contracts for APIs and agents live in `/schemas`.
+### 3. Infrastructure Standards
+
+* All Lambdas run in a private VPC
+* Each agent has a least-privilege IAM role
+* Logs are streamed to CloudWatch; all agents log to RDS `agent_runs`
+* Secrets are managed via AWS Secrets Manager
+
+### 4. DevOps & Observability
+
+* CDK (in TypeScript) defines all infrastructure
+* GitHub Actions deploys frontend, Lambdas, and CDK stacks
+* App, agents, and infra live in a single monorepo
 
 ---
 
-## 🔎 API Structure Overview
+## 🔎 API + Execution Structure
 
-### Internal App Routes (`/pages/api/*`)
+### Internal App Logic (App Router Server Actions)
 
-Each route:
+Your app uses **Next.js Server Actions** to:
 
-* Is called from frontend dashboard or mobile interface
-* Performs input validation
-* Invokes one or more Lambda agents via SDK or EventBridge
+* Call Python Lambdas via AWS SDK (`@aws-sdk/client-lambda`)
+* Query RDS (e.g. claim logs, payment status)
+* Trigger Step Functions for multi-agent workflows
 
-| Route                    | Purpose                | Agent Triggered         |
-| ------------------------ | ---------------------- | ----------------------- |
-| `/api/submit-claim`      | Trigger 837 submission | `SubmitClaimAgent`      |
-| `/api/check-eligibility` | Run 270/271 query      | `EligibilityAgent`      |
-| `/api/generate-appeal`   | Draft appeal letter    | `AppealLetterAgent`     |
-| `/api/post-remit`        | Ingest uploaded 835    | `ERAParserAgent`        |
-| `/api/estimate-cost`     | Predict patient OOP    | `PatientEstimatorAgent` |
+Server Actions replace most API routes. Minimal `/api/` endpoints are kept only when needed (e.g. uploads).
 
-### External Webhook Endpoints (API Gateway)
+| Action               | Calls Agent Lambda      |
+| -------------------- | ----------------------- |
+| Submit claim         | `SubmitClaimAgent`      |
+| Check eligibility    | `EligibilityAgent`      |
+| Generate appeal      | `AppealLetterAgent`     |
+| Estimate patient OOP | `PatientEstimatorAgent` |
 
-All third-party systems (e.g. Claim.MD, 1upHealth) hit these:
+### External Webhooks (API Gateway + Lambdas)
 
-* API Gateway routes map directly to webhook Lambdas
-* All webhook handlers are retry-safe, log failures, and call async agents
-
-| Webhook Path              | Source          | Handler Lambda          |
-| ------------------------- | --------------- | ----------------------- |
-| `POST /webhook/era`       | Claim.MD (835)  | `ERAParserAgent`        |
-| `POST /webhook/denial`    | Claim.MD (277)  | `DenialClassifierAgent` |
-| `POST /webhook/chartdrop` | EHR / 1upHealth | Triggers `CodingAgent`  |
+| Webhook Route          | Source          | Handler Lambda          |
+| ---------------------- | --------------- | ----------------------- |
+| `POST /webhook/era`    | Claim.MD (835)  | `ERAParserAgent`        |
+| `POST /webhook/denial` | Claim.MD (277)  | `DenialClassifierAgent` |
+| `POST /webhook/chart`  | EHR / 1upHealth | Triggers `CodingAgent`  |
 
 ---
 
@@ -94,19 +103,19 @@ All third-party systems (e.g. Claim.MD, 1upHealth) hit these:
 
 ```
 /                       ← monorepo root
-├── amplify/            ← Amplify-managed backend (auth, storage, APIs)
-├── app/                ← Next.js app from amplify-next-template (TS)
-│   └── pages/api/      ← API routes triggered from app
-├── agents/             ← One folder per Python-based Lambda agent
+├── app/                ← Next.js App Router frontend (TS)
+│   ├── app/            ← UI routes, layouts, Server Actions
+│   └── lib/            ← DB, session, AWS SDK logic
+├── agents/             ← Python-based Lambdas (one folder per agent)
 │   └── CodingAgent/
 │       ├── handler.py
 │       ├── prompt.py
 │       └── schema.py
-├── infra/              ← CDK app (TypeScript) for agents, RDS, S3, VPC, IAM
-│   └── lib/            ← Stack definitions per infra domain
-├── schemas/            ← JSON schemas for agents and API I/O contracts
-├── scripts/            ← Test runners, local harness tools
-├── .github/workflows/  ← CI/CD: CDK deploy, Lambda build + package
+├── infra/              ← CDK (TypeScript) for VPC, IAM, API GW, Lambda
+│   └── lib/            ← CDK stack definitions
+├── schemas/            ← JSON schemas (I/O contracts)
+├── scripts/            ← Agent test runners, bootstrap scripts
+├── .github/workflows/  ← CI/CD: Amplify + CDK deploy
 └── README.md
 ```
 
@@ -114,47 +123,42 @@ All third-party systems (e.g. Claim.MD, 1upHealth) hit these:
 
 ## 🔐 Security & HIPAA
 
-* All services reside in encrypted private subnets
-* IAM roles scoped to function per agent
-* S3 (encrypted, versioned, access-logged)
-* RDS (encrypted, password-rotated)
-* Secrets via AWS Secrets Manager (rotated every 90 days)
-* CloudTrail + GuardDuty + CloudWatch alarms enabled
+* Encrypted VPC subnets
+* IAM: scoped per Lambda
+* S3: encrypted, private, versioned
+* RDS: encrypted, backups, password-rotated
+* CloudTrail + GuardDuty + CloudWatch Logs enabled
+* Secrets rotated via AWS Secrets Manager
 
 ---
 
 ## ♻️ LLM Feedback Loop
 
-| Stage              | Agent            | Data Logged                                     |
-| ------------------ | ---------------- | ----------------------------------------------- |
-| Initial Prediction | `CodingAgent`    | CPT/ICD guess with LLM metadata                 |
-| Human Review       | UI-layer         | CPT/ICD corrections stored in delta record      |
-| Outcome Tracking   | `ERAParserAgent` | `paid`, `denied`, `adjusted` result recorded    |
-| Re-train Prep      | Scripted         | Exported `training_pairs.json` from agent\_runs |
+Structured logs are stored for post-hoc analysis + training:
 
-All structured deltas are stored for training Nova Pro-style fine-tuned agents.
-
----
-
-## 🚀 Dev & Deploy
-
-* **Frontend**: Amplify auto-deploy from `main`
-* **CDK stacks**: Deployed via `cdk deploy` or GitHub Actions
-* **Agents**: Python Lambdas deployed from `/agents/` using zipped packages
-* **Run locally**: `scripts/run-local-agent.sh` simulates event payload
+| Step               | Agent            | Logs                           |
+| ------------------ | ---------------- | ------------------------------ |
+| Initial prediction | `CodingAgent`    | CPT/ICD guess + prompt meta    |
+| Human override     | Manual via UI    | CPT/ICD correction log         |
+| Claim outcome      | `ERAParserAgent` | Payment / denial status        |
+| Re-train           | CLI batch job    | Generates training\_pairs.json |
 
 ---
 
-## 🌐 EHR Integration (via 1upHealth)
+## 🚀 Dev & Deployment
 
-* Use org-signed B2B (preferred) or patient-auth flows
-* Fetch:
+* Amplify auto-builds frontend on push to `main`
+* GitHub Actions triggers CDK deploy (infra)
+* Python Lambdas built via zip package per agent
+* Local dev: use `scripts/run-local-agent.sh`
 
-  * `Patient`
-  * `Encounter`
-  * `Condition`
-  * `DocumentReference`
-  * `Observation`
-  * `MedicationRequest`
-* Store structured data in RDS, and PDFs / raw bundles in S3
-* All calls from inside Python Lambdas only
+---
+
+## 🌐 EHR Integration: 1upHealth
+
+* Uses org-signed B2B token flow (or patient auth)
+* Pulls FHIR resources:
+  * Patient, Encounter, Condition
+  * Observation, DocumentReference, MedicationRequest
+* Stored in S3 (raw) and RDS (normalized)
+* Accessed only from secure Lambdas
