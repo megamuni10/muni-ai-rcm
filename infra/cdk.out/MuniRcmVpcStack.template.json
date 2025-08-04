@@ -1,0 +1,2109 @@
+{
+ "Description": "VPC and networking for Muni Health RCM platform",
+ "Resources": {
+  "MuniRcmVpc94D5ED22": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/Resource"
+   }
+  },
+  "MuniRcmVpcPublicSubnet1Subnet286CD494": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.0.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/Subnet"
+   }
+  },
+  "MuniRcmVpcPublicSubnet1RouteTable194079E2": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/RouteTable"
+   }
+  },
+  "MuniRcmVpcPublicSubnet1RouteTableAssociationC38A961A": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPublicSubnet1RouteTable194079E2"
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcPublicSubnet1Subnet286CD494"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "MuniRcmVpcPublicSubnet1DefaultRoute40DAD669": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "MuniRcmVpcIGW606DD5C2"
+    },
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPublicSubnet1RouteTable194079E2"
+    }
+   },
+   "DependsOn": [
+    "MuniRcmVpcVPCGW99F87AA3"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "MuniRcmVpcPublicSubnet1EIP20B5050E": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/EIP"
+   }
+  },
+  "MuniRcmVpcPublicSubnet1NATGateway2FEB8574": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "MuniRcmVpcPublicSubnet1EIP20B5050E",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcPublicSubnet1Subnet286CD494"
+    },
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "DependsOn": [
+    "MuniRcmVpcPublicSubnet1DefaultRoute40DAD669",
+    "MuniRcmVpcPublicSubnet1RouteTableAssociationC38A961A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/NATGateway"
+   }
+  },
+  "MuniRcmVpcPublicSubnet2SubnetA430CF4B": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.1.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/Subnet"
+   }
+  },
+  "MuniRcmVpcPublicSubnet2RouteTable7186DA2B": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/RouteTable"
+   }
+  },
+  "MuniRcmVpcPublicSubnet2RouteTableAssociation4ACD401C": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPublicSubnet2RouteTable7186DA2B"
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcPublicSubnet2SubnetA430CF4B"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "MuniRcmVpcPublicSubnet2DefaultRouteEE191434": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "MuniRcmVpcIGW606DD5C2"
+    },
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPublicSubnet2RouteTable7186DA2B"
+    }
+   },
+   "DependsOn": [
+    "MuniRcmVpcVPCGW99F87AA3"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/DefaultRoute"
+   }
+  },
+  "MuniRcmVpcPublicSubnet2EIP68F36230": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/EIP"
+   }
+  },
+  "MuniRcmVpcPublicSubnet2NATGateway4D341B96": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "MuniRcmVpcPublicSubnet2EIP68F36230",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcPublicSubnet2SubnetA430CF4B"
+    },
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "DependsOn": [
+    "MuniRcmVpcPublicSubnet2DefaultRouteEE191434",
+    "MuniRcmVpcPublicSubnet2RouteTableAssociation4ACD401C"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/NATGateway"
+   }
+  },
+  "MuniRcmVpcPublicSubnet3Subnet6B8D0535": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1c",
+    "CidrBlock": "10.0.2.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3/Subnet"
+   }
+  },
+  "MuniRcmVpcPublicSubnet3RouteTableFB1B0C30": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3/RouteTable"
+   }
+  },
+  "MuniRcmVpcPublicSubnet3RouteTableAssociation090528D8": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPublicSubnet3RouteTableFB1B0C30"
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcPublicSubnet3Subnet6B8D0535"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3/RouteTableAssociation"
+   }
+  },
+  "MuniRcmVpcPublicSubnet3DefaultRoute4AA3E3F3": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "MuniRcmVpcIGW606DD5C2"
+    },
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPublicSubnet3RouteTableFB1B0C30"
+    }
+   },
+   "DependsOn": [
+    "MuniRcmVpcVPCGW99F87AA3"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3/DefaultRoute"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet1Subnet394E87F1": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.3.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1/Subnet"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet1RouteTable5EDB005D": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1/RouteTable"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet1RouteTableAssociation1D91AF35": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPrivateSubnet1RouteTable5EDB005D"
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1/RouteTableAssociation"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet1DefaultRouteBD2F699A": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "MuniRcmVpcPublicSubnet1NATGateway2FEB8574"
+    },
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPrivateSubnet1RouteTable5EDB005D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1/DefaultRoute"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet2Subnet7ADE5552": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.4.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2/Subnet"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet2RouteTableDFC19870": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2/RouteTable"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet2RouteTableAssociation595B2B3F": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPrivateSubnet2RouteTableDFC19870"
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2/RouteTableAssociation"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet2DefaultRoute84C550AE": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "MuniRcmVpcPublicSubnet2NATGateway4D341B96"
+    },
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPrivateSubnet2RouteTableDFC19870"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2/DefaultRoute"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1c",
+    "CidrBlock": "10.0.5.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3/Subnet"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet3RouteTableC5D4F9E2": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3/RouteTable"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet3RouteTableAssociation9B57BFA2": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPrivateSubnet3RouteTableC5D4F9E2"
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3/RouteTableAssociation"
+   }
+  },
+  "MuniRcmVpcPrivateSubnet3DefaultRouteAEB8C725": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "MuniRcmVpcPublicSubnet1NATGateway2FEB8574"
+    },
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcPrivateSubnet3RouteTableC5D4F9E2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3/DefaultRoute"
+   }
+  },
+  "MuniRcmVpcDatabaseSubnet1Subnet20848FB4": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.6.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Database"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet1/Subnet"
+   }
+  },
+  "MuniRcmVpcDatabaseSubnet1RouteTable53D0600A": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet1/RouteTable"
+   }
+  },
+  "MuniRcmVpcDatabaseSubnet1RouteTableAssociation5DA739CC": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcDatabaseSubnet1RouteTable53D0600A"
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcDatabaseSubnet1Subnet20848FB4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet1/RouteTableAssociation"
+   }
+  },
+  "MuniRcmVpcDatabaseSubnet2Subnet421AE670": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.7.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Database"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet2/Subnet"
+   }
+  },
+  "MuniRcmVpcDatabaseSubnet2RouteTableCBBAF700": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet2/RouteTable"
+   }
+  },
+  "MuniRcmVpcDatabaseSubnet2RouteTableAssociationF129757F": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcDatabaseSubnet2RouteTableCBBAF700"
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcDatabaseSubnet2Subnet421AE670"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet2/RouteTableAssociation"
+   }
+  },
+  "MuniRcmVpcDatabaseSubnet3Subnet6E4404C9": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1c",
+    "CidrBlock": "10.0.8.0/24",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Database"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet3"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet3/Subnet"
+   }
+  },
+  "MuniRcmVpcDatabaseSubnet3RouteTableD4F41CDB": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet3"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet3/RouteTable"
+   }
+  },
+  "MuniRcmVpcDatabaseSubnet3RouteTableAssociation8F4B5589": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "MuniRcmVpcDatabaseSubnet3RouteTableD4F41CDB"
+    },
+    "SubnetId": {
+     "Ref": "MuniRcmVpcDatabaseSubnet3Subnet6E4404C9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet3/RouteTableAssociation"
+   }
+  },
+  "MuniRcmVpcIGW606DD5C2": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/MuniRcmVpc"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/IGW"
+   }
+  },
+  "MuniRcmVpcVPCGW99F87AA3": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "MuniRcmVpcIGW606DD5C2"
+    },
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/VPCGW"
+   }
+  },
+  "MuniRcmVpcRestrictDefaultSecurityGroupCustomResourceEE0E7ADD": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "MuniRcmVpc94D5ED22",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": "533266974264"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/RestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "MuniRcmVpcS3EndpointA857BB02": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "RouteTableIds": [
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet1RouteTable5EDB005D"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet2RouteTableDFC19870"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet3RouteTableC5D4F9E2"
+     },
+     {
+      "Ref": "MuniRcmVpcDatabaseSubnet1RouteTable53D0600A"
+     },
+     {
+      "Ref": "MuniRcmVpcDatabaseSubnet2RouteTableCBBAF700"
+     },
+     {
+      "Ref": "MuniRcmVpcDatabaseSubnet3RouteTableD4F41CDB"
+     }
+    ],
+    "ServiceName": {
+     "Fn::Join": [
+      "",
+      [
+       "com.amazonaws.",
+       {
+        "Ref": "AWS::Region"
+       },
+       ".s3"
+      ]
+     ]
+    },
+    "VpcEndpointType": "Gateway",
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/S3Endpoint/Resource"
+   }
+  },
+  "MuniRcmVpclambdaEndpoint9110CB02": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "PrivateDnsEnabled": true,
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "LambdaSecurityGroup0BD9FC99",
+       "GroupId"
+      ]
+     }
+    ],
+    "ServiceName": "com.amazonaws.us-east-1.lambda",
+    "SubnetIds": [
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+     }
+    ],
+    "VpcEndpointType": "Interface",
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/lambdaEndpoint/Resource"
+   }
+  },
+  "MuniRcmVpcrdsEndpointB6ECFAD9": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "PrivateDnsEnabled": true,
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "LambdaSecurityGroup0BD9FC99",
+       "GroupId"
+      ]
+     }
+    ],
+    "ServiceName": "com.amazonaws.us-east-1.rds",
+    "SubnetIds": [
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+     }
+    ],
+    "VpcEndpointType": "Interface",
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/rdsEndpoint/Resource"
+   }
+  },
+  "MuniRcmVpcsecretsmanagerEndpointBE4C3E71": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "PrivateDnsEnabled": true,
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "LambdaSecurityGroup0BD9FC99",
+       "GroupId"
+      ]
+     }
+    ],
+    "ServiceName": "com.amazonaws.us-east-1.secretsmanager",
+    "SubnetIds": [
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+     }
+    ],
+    "VpcEndpointType": "Interface",
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/secretsmanagerEndpoint/Resource"
+   }
+  },
+  "MuniRcmVpckmsEndpointF436B658": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "PrivateDnsEnabled": true,
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "LambdaSecurityGroup0BD9FC99",
+       "GroupId"
+      ]
+     }
+    ],
+    "ServiceName": "com.amazonaws.us-east-1.kms",
+    "SubnetIds": [
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+     }
+    ],
+    "VpcEndpointType": "Interface",
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/kmsEndpoint/Resource"
+   }
+  },
+  "MuniRcmVpclogsEndpointCAAC7B87": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "PrivateDnsEnabled": true,
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "LambdaSecurityGroup0BD9FC99",
+       "GroupId"
+      ]
+     }
+    ],
+    "ServiceName": "com.amazonaws.us-east-1.logs",
+    "SubnetIds": [
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+     }
+    ],
+    "VpcEndpointType": "Interface",
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/logsEndpoint/Resource"
+   }
+  },
+  "MuniRcmVpcmonitoringEndpoint64FCBD66": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "PrivateDnsEnabled": true,
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "LambdaSecurityGroup0BD9FC99",
+       "GroupId"
+      ]
+     }
+    ],
+    "ServiceName": "com.amazonaws.us-east-1.monitoring",
+    "SubnetIds": [
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+     }
+    ],
+    "VpcEndpointType": "Interface",
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/monitoringEndpoint/Resource"
+   }
+  },
+  "MuniRcmVpceventsEndpoint05B3DD02": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "PrivateDnsEnabled": true,
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "LambdaSecurityGroup0BD9FC99",
+       "GroupId"
+      ]
+     }
+    ],
+    "ServiceName": "com.amazonaws.us-east-1.events",
+    "SubnetIds": [
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+     }
+    ],
+    "VpcEndpointType": "Interface",
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/eventsEndpoint/Resource"
+   }
+  },
+  "MuniRcmVpcbedrockruntimeEndpoint7AB0A1B2": {
+   "Type": "AWS::EC2::VPCEndpoint",
+   "Properties": {
+    "PrivateDnsEnabled": true,
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "LambdaSecurityGroup0BD9FC99",
+       "GroupId"
+      ]
+     }
+    ],
+    "ServiceName": "com.amazonaws.us-east-1.bedrock-runtime",
+    "SubnetIds": [
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+     },
+     {
+      "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+     }
+    ],
+    "VpcEndpointType": "Interface",
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/MuniRcmVpc/bedrock-runtimeEndpoint/Resource"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:ec2:us-east-1:533266974264:security-group/",
+             {
+              "Fn::GetAtt": [
+               "MuniRcmVpc94D5ED22",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-533266974264-us-east-1",
+     "S3Key": "ee7de53d64cc9d6248fa6aa550f92358f6c907b5efd6f3298aeab1b5e7ea358a.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.ee7de53d64cc9d6248fa6aa550f92358f6c907b5efd6f3298aeab1b5e7ea358a",
+    "aws:asset:property": "Code"
+   }
+  },
+  "VpcFlowLogIAMRoleB4DCB624": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "vpc-flow-logs.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/VpcFlowLog"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/VpcFlowLog/IAMRole/Resource"
+   }
+  },
+  "VpcFlowLogIAMRoleDefaultPolicy7533133B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:DescribeLogStreams",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "VpcFlowLogLogGroupBB186289",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "VpcFlowLogIAMRoleB4DCB624",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "VpcFlowLogIAMRoleDefaultPolicy7533133B",
+    "Roles": [
+     {
+      "Ref": "VpcFlowLogIAMRoleB4DCB624"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/VpcFlowLog/IAMRole/DefaultPolicy/Resource"
+   }
+  },
+  "VpcFlowLogLogGroupBB186289": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "RetentionInDays": 731,
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/VpcFlowLog"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/VpcFlowLog/LogGroup/Resource"
+   }
+  },
+  "VpcFlowLogF72230C7": {
+   "Type": "AWS::EC2::FlowLog",
+   "Properties": {
+    "DeliverLogsPermissionArn": {
+     "Fn::GetAtt": [
+      "VpcFlowLogIAMRoleB4DCB624",
+      "Arn"
+     ]
+    },
+    "LogDestinationType": "cloud-watch-logs",
+    "LogGroupName": {
+     "Ref": "VpcFlowLogLogGroupBB186289"
+    },
+    "ResourceId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    },
+    "ResourceType": "VPC",
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Name",
+      "Value": "MuniRcmVpcStack/VpcFlowLog"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "TrafficType": "ALL"
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/VpcFlowLog/FlowLog"
+   }
+  },
+  "LambdaSecurityGroup0BD9FC99": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for RCM Lambda functions",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": {
+       "Fn::GetAtt": [
+        "MuniRcmVpc94D5ED22",
+        "CidrBlock"
+       ]
+      },
+      "Description": {
+       "Fn::Join": [
+        "",
+        [
+         "from ",
+         {
+          "Fn::GetAtt": [
+           "MuniRcmVpc94D5ED22",
+           "CidrBlock"
+          ]
+         },
+         ":443"
+        ]
+       ]
+      },
+      "FromPort": 443,
+      "IpProtocol": "tcp",
+      "ToPort": 443
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/LambdaSecurityGroup/Resource"
+   }
+  },
+  "DatabaseSecurityGroup7319C0F6": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for RDS PostgreSQL database",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "255.255.255.255/32",
+      "Description": "Disallow all traffic",
+      "FromPort": 252,
+      "IpProtocol": "icmp",
+      "ToPort": 86
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Ref": "MuniRcmVpc94D5ED22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/DatabaseSecurityGroup/Resource"
+   }
+  },
+  "DatabaseSecurityGroupfromMuniRcmVpcStackLambdaSecurityGroup485843F454322DAC6A71": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow Lambda functions to connect to PostgreSQL",
+    "FromPort": 5432,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "DatabaseSecurityGroup7319C0F6",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "LambdaSecurityGroup0BD9FC99",
+      "GroupId"
+     ]
+    },
+    "ToPort": 5432
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/DatabaseSecurityGroup/from MuniRcmVpcStackLambdaSecurityGroup485843F4:5432"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/31QTW+CQBD9Lb2vW7VJe7bGGhPTEmi8Nssy0lHYITuzEkP47w2g0Et7eh/z8jIzS714ftKLB1PzzGbnWYGpbhIx9qxMzV8N2KVuDpVV66M7RGsVhbRAm4TUgXTexGIKAp8mLWDyJ2/FTBaNILkx3JHNLurg3cjWCNTmqiKPFyMwFe+cgHcwBoZNbmolYux3CU7UzTlUduOyitDJLTrKvuloLPzOvBVU7ynvsneagA0e5br1FKr+mn+Nncs9MLcKTambmIYP9BhRgbZfeWCtKihn3ewpH7vuvG1VDEzBW1DrwELlJI/uj1Hk6YIZ+FfDoFbMIImYHF1/z0eQKkirHGWgT/x4Wc714kXPH06MOPPBCZag4wF/AOmyZkwKAgAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmVpcStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "LambdaSecurityGroupId": {
+   "Description": "Security Group ID for Lambda functions",
+   "Value": {
+    "Fn::GetAtt": [
+     "LambdaSecurityGroup0BD9FC99",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "MuniRcm-LambdaSecurityGroup"
+   }
+  },
+  "DatabaseSecurityGroupId": {
+   "Description": "Security Group ID for RDS database",
+   "Value": {
+    "Fn::GetAtt": [
+     "DatabaseSecurityGroup7319C0F6",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "MuniRcm-DatabaseSecurityGroup"
+   }
+  },
+  "VpcId": {
+   "Description": "VPC ID for Muni RCM platform",
+   "Value": {
+    "Ref": "MuniRcmVpc94D5ED22"
+   },
+   "Export": {
+    "Name": "MuniRcm-VpcId"
+   }
+  },
+  "ExportsOutputRefMuniRcmVpcDatabaseSubnet1Subnet20848FB48580EF45": {
+   "Value": {
+    "Ref": "MuniRcmVpcDatabaseSubnet1Subnet20848FB4"
+   },
+   "Export": {
+    "Name": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcDatabaseSubnet1Subnet20848FB48580EF45"
+   }
+  },
+  "ExportsOutputRefMuniRcmVpcDatabaseSubnet2Subnet421AE6704AC8DAAA": {
+   "Value": {
+    "Ref": "MuniRcmVpcDatabaseSubnet2Subnet421AE670"
+   },
+   "Export": {
+    "Name": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcDatabaseSubnet2Subnet421AE6704AC8DAAA"
+   }
+  },
+  "ExportsOutputRefMuniRcmVpcDatabaseSubnet3Subnet6E4404C9D174C067": {
+   "Value": {
+    "Ref": "MuniRcmVpcDatabaseSubnet3Subnet6E4404C9"
+   },
+   "Export": {
+    "Name": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcDatabaseSubnet3Subnet6E4404C9D174C067"
+   }
+  },
+  "ExportsOutputRefMuniRcmVpc94D5ED2267A97763": {
+   "Value": {
+    "Ref": "MuniRcmVpc94D5ED22"
+   },
+   "Export": {
+    "Name": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpc94D5ED2267A97763"
+   }
+  },
+  "ExportsOutputRefMuniRcmVpcPrivateSubnet1Subnet394E87F1B402678E": {
+   "Value": {
+    "Ref": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+   },
+   "Export": {
+    "Name": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcPrivateSubnet1Subnet394E87F1B402678E"
+   }
+  },
+  "ExportsOutputRefMuniRcmVpcPrivateSubnet2Subnet7ADE5552F72344C2": {
+   "Value": {
+    "Ref": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+   },
+   "Export": {
+    "Name": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcPrivateSubnet2Subnet7ADE5552F72344C2"
+   }
+  },
+  "ExportsOutputRefMuniRcmVpcPrivateSubnet3Subnet85CF6DAF17582F0B": {
+   "Value": {
+    "Ref": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+   },
+   "Export": {
+    "Name": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcPrivateSubnet3Subnet85CF6DAF17582F0B"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

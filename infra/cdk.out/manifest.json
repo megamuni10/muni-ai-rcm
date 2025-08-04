@@ -1,0 +1,1469 @@
+{
+  "version": "38.0.1",
+  "artifacts": {
+    "MuniRcmSecurityStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "MuniRcmSecurityStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "MuniRcmSecurityStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://533266974264/us-east-1",
+      "properties": {
+        "templateFile": "MuniRcmSecurityStack.template.json",
+        "terminationProtection": false,
+        "tags": {
+          "Compliance": "HIPAA",
+          "CostCenter": "RCM-Platform",
+          "Environment": "development",
+          "Owner": "MuniHealth",
+          "Project": "MuniHealthRCM"
+        },
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-deploy-role-533266974264-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-cfn-exec-role-533266974264-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-533266974264-us-east-1/a976bc2c652f9fd32615cb6c5cd95871f8bbd88df3f5b5aa3dc991e720d34082.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "MuniRcmSecurityStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-lookup-role-533266974264-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "MuniRcmSecurityStack.assets"
+      ],
+      "metadata": {
+        "/MuniRcmSecurityStack": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Compliance",
+                "Value": "HIPAA"
+              },
+              {
+                "Key": "CostCenter",
+                "Value": "RCM-Platform"
+              },
+              {
+                "Key": "Environment",
+                "Value": "development"
+              },
+              {
+                "Key": "Owner",
+                "Value": "MuniHealth"
+              },
+              {
+                "Key": "Project",
+                "Value": "MuniHealthRCM"
+              }
+            ]
+          }
+        ],
+        "/MuniRcmSecurityStack/MuniRcmMasterKey/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmMasterKey0BEB88BF"
+          }
+        ],
+        "/MuniRcmSecurityStack/MuniRcmMasterKey/Alias/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmMasterKeyAlias613476BE"
+          }
+        ],
+        "/MuniRcmSecurityStack/AmplifyServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AmplifyServiceRole1EB3E935"
+          }
+        ],
+        "/MuniRcmSecurityStack/ClaimMdCredentials/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ClaimMdCredentialsBE23CB62"
+          }
+        ],
+        "/MuniRcmSecurityStack/OneUpHealthCredentials/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OneUpHealthCredentials53BC3C0A"
+          }
+        ],
+        "/MuniRcmSecurityStack/HipaaCompliancePolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HipaaCompliancePolicy93B7D927"
+          }
+        ],
+        "/MuniRcmSecurityStack/BedrockServiceLinkedRole": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BedrockServiceLinkedRole"
+          }
+        ],
+        "/MuniRcmSecurityStack/CloudTrailRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudTrailRole9EE963D2"
+          }
+        ],
+        "/MuniRcmSecurityStack/MasterKmsKeyId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MasterKmsKeyId"
+          }
+        ],
+        "/MuniRcmSecurityStack/AmplifyServiceRoleArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AmplifyServiceRoleArn"
+          }
+        ],
+        "/MuniRcmSecurityStack/ClaimMdSecretArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ClaimMdSecretArn"
+          }
+        ],
+        "/MuniRcmSecurityStack/OneUpHealthSecretArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "OneUpHealthSecretArn"
+          }
+        ],
+        "/MuniRcmSecurityStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/MuniRcmSecurityStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/MuniRcmSecurityStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "MuniRcmSecurityStack"
+    },
+    "MuniRcmVpcStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "MuniRcmVpcStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "MuniRcmVpcStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://533266974264/us-east-1",
+      "properties": {
+        "templateFile": "MuniRcmVpcStack.template.json",
+        "terminationProtection": false,
+        "tags": {
+          "Compliance": "HIPAA",
+          "CostCenter": "RCM-Platform",
+          "Environment": "development",
+          "Owner": "MuniHealth",
+          "Project": "MuniHealthRCM"
+        },
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-deploy-role-533266974264-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-cfn-exec-role-533266974264-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-533266974264-us-east-1/f1e3d261ca999ec81f4a5281b3ab1cb46fd1013779849d5271a17666a9f834a6.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "MuniRcmVpcStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-lookup-role-533266974264-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "MuniRcmVpcStack.assets"
+      ],
+      "metadata": {
+        "/MuniRcmVpcStack": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Compliance",
+                "Value": "HIPAA"
+              },
+              {
+                "Key": "CostCenter",
+                "Value": "RCM-Platform"
+              },
+              {
+                "Key": "Environment",
+                "Value": "development"
+              },
+              {
+                "Key": "Owner",
+                "Value": "MuniHealth"
+              },
+              {
+                "Key": "Project",
+                "Value": "MuniHealthRCM"
+              }
+            ]
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpc94D5ED22"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet1Subnet286CD494"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet1RouteTable194079E2"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet1RouteTableAssociationC38A961A"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet1DefaultRoute40DAD669"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet1EIP20B5050E"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet1/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet1NATGateway2FEB8574"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet2SubnetA430CF4B"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet2RouteTable7186DA2B"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet2RouteTableAssociation4ACD401C"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet2DefaultRouteEE191434"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/EIP": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet2EIP68F36230"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet2/NATGateway": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet2NATGateway4D341B96"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet3Subnet6B8D0535"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet3RouteTableFB1B0C30"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet3RouteTableAssociation090528D8"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PublicSubnet3/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPublicSubnet3DefaultRoute4AA3E3F3"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet1Subnet394E87F1"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet1RouteTable5EDB005D"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet1RouteTableAssociation1D91AF35"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet1/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet1DefaultRouteBD2F699A"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet2Subnet7ADE5552"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet2RouteTableDFC19870"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet2RouteTableAssociation595B2B3F"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet2/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet2DefaultRoute84C550AE"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet3Subnet85CF6DAF"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet3RouteTableC5D4F9E2"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet3RouteTableAssociation9B57BFA2"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/PrivateSubnet3/DefaultRoute": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcPrivateSubnet3DefaultRouteAEB8C725"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet1/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcDatabaseSubnet1Subnet20848FB4"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet1/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcDatabaseSubnet1RouteTable53D0600A"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet1/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcDatabaseSubnet1RouteTableAssociation5DA739CC"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet2/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcDatabaseSubnet2Subnet421AE670"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet2/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcDatabaseSubnet2RouteTableCBBAF700"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet2/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcDatabaseSubnet2RouteTableAssociationF129757F"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet3/Subnet": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcDatabaseSubnet3Subnet6E4404C9"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet3/RouteTable": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcDatabaseSubnet3RouteTableD4F41CDB"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/DatabaseSubnet3/RouteTableAssociation": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcDatabaseSubnet3RouteTableAssociation8F4B5589"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/IGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcIGW606DD5C2"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/VPCGW": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcVPCGW99F87AA3"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/RestrictDefaultSecurityGroupCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcRestrictDefaultSecurityGroupCustomResourceEE0E7ADD"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/S3Endpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcS3EndpointA857BB02"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/lambdaEndpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpclambdaEndpoint9110CB02"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/rdsEndpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcrdsEndpointB6ECFAD9"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/secretsmanagerEndpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcsecretsmanagerEndpointBE4C3E71"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/kmsEndpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpckmsEndpointF436B658"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/logsEndpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpclogsEndpointCAAC7B87"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/monitoringEndpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcmonitoringEndpoint64FCBD66"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/eventsEndpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpceventsEndpoint05B3DD02"
+          }
+        ],
+        "/MuniRcmVpcStack/MuniRcmVpc/bedrock-runtimeEndpoint/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmVpcbedrockruntimeEndpoint7AB0A1B2"
+          }
+        ],
+        "/MuniRcmVpcStack/Custom::VpcRestrictDefaultSGCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/MuniRcmVpcStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+          }
+        ],
+        "/MuniRcmVpcStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E"
+          }
+        ],
+        "/MuniRcmVpcStack/VpcFlowLog/IAMRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcFlowLogIAMRoleB4DCB624"
+          }
+        ],
+        "/MuniRcmVpcStack/VpcFlowLog/IAMRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcFlowLogIAMRoleDefaultPolicy7533133B"
+          }
+        ],
+        "/MuniRcmVpcStack/VpcFlowLog/LogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcFlowLogLogGroupBB186289"
+          }
+        ],
+        "/MuniRcmVpcStack/VpcFlowLog/FlowLog": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcFlowLogF72230C7"
+          }
+        ],
+        "/MuniRcmVpcStack/LambdaSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaSecurityGroup0BD9FC99"
+          }
+        ],
+        "/MuniRcmVpcStack/DatabaseSecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSecurityGroup7319C0F6"
+          }
+        ],
+        "/MuniRcmVpcStack/DatabaseSecurityGroup/from MuniRcmVpcStackLambdaSecurityGroup485843F4:5432": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSecurityGroupfromMuniRcmVpcStackLambdaSecurityGroup485843F454322DAC6A71"
+          }
+        ],
+        "/MuniRcmVpcStack/LambdaSecurityGroupId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaSecurityGroupId"
+          }
+        ],
+        "/MuniRcmVpcStack/DatabaseSecurityGroupId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSecurityGroupId"
+          }
+        ],
+        "/MuniRcmVpcStack/VpcId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "VpcId"
+          }
+        ],
+        "/MuniRcmVpcStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/MuniRcmVpcStack/Exports/Output{\"Ref\":\"MuniRcmVpcDatabaseSubnet1Subnet20848FB4\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefMuniRcmVpcDatabaseSubnet1Subnet20848FB48580EF45"
+          }
+        ],
+        "/MuniRcmVpcStack/Exports/Output{\"Ref\":\"MuniRcmVpcDatabaseSubnet2Subnet421AE670\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefMuniRcmVpcDatabaseSubnet2Subnet421AE6704AC8DAAA"
+          }
+        ],
+        "/MuniRcmVpcStack/Exports/Output{\"Ref\":\"MuniRcmVpcDatabaseSubnet3Subnet6E4404C9\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefMuniRcmVpcDatabaseSubnet3Subnet6E4404C9D174C067"
+          }
+        ],
+        "/MuniRcmVpcStack/Exports/Output{\"Ref\":\"MuniRcmVpc94D5ED22\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefMuniRcmVpc94D5ED2267A97763"
+          }
+        ],
+        "/MuniRcmVpcStack/Exports/Output{\"Ref\":\"MuniRcmVpcPrivateSubnet1Subnet394E87F1\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefMuniRcmVpcPrivateSubnet1Subnet394E87F1B402678E"
+          }
+        ],
+        "/MuniRcmVpcStack/Exports/Output{\"Ref\":\"MuniRcmVpcPrivateSubnet2Subnet7ADE5552\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefMuniRcmVpcPrivateSubnet2Subnet7ADE5552F72344C2"
+          }
+        ],
+        "/MuniRcmVpcStack/Exports/Output{\"Ref\":\"MuniRcmVpcPrivateSubnet3Subnet85CF6DAF\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefMuniRcmVpcPrivateSubnet3Subnet85CF6DAF17582F0B"
+          }
+        ],
+        "/MuniRcmVpcStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/MuniRcmVpcStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "MuniRcmVpcStack"
+    },
+    "MuniRcmDatabaseStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "MuniRcmDatabaseStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "MuniRcmDatabaseStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://533266974264/us-east-1",
+      "properties": {
+        "templateFile": "MuniRcmDatabaseStack.template.json",
+        "terminationProtection": false,
+        "tags": {
+          "Compliance": "HIPAA",
+          "CostCenter": "RCM-Platform",
+          "Environment": "development",
+          "Owner": "MuniHealth",
+          "Project": "MuniHealthRCM"
+        },
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-deploy-role-533266974264-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-cfn-exec-role-533266974264-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-533266974264-us-east-1/ec68640909f66ba673623fa75a3a07ee4523be30809efcb37bd7d97e37a14d29.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "MuniRcmDatabaseStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-lookup-role-533266974264-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "MuniRcmVpcStack",
+        "MuniRcmSecurityStack",
+        "MuniRcmDatabaseStack.assets"
+      ],
+      "metadata": {
+        "/MuniRcmDatabaseStack": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Compliance",
+                "Value": "HIPAA"
+              },
+              {
+                "Key": "CostCenter",
+                "Value": "RCM-Platform"
+              },
+              {
+                "Key": "Environment",
+                "Value": "development"
+              },
+              {
+                "Key": "Owner",
+                "Value": "MuniHealth"
+              },
+              {
+                "Key": "Project",
+                "Value": "MuniHealthRCM"
+              }
+            ]
+          }
+        ],
+        "/MuniRcmDatabaseStack/MuniRcmEncryptionKey/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmEncryptionKey35CCED6D"
+          }
+        ],
+        "/MuniRcmDatabaseStack/MuniRcmAccessLogsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmAccessLogsBucket051B4065"
+          }
+        ],
+        "/MuniRcmDatabaseStack/MuniRcmAccessLogsBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmAccessLogsBucketPolicyA6B6CFD2"
+          }
+        ],
+        "/MuniRcmDatabaseStack/MuniRcmDataBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmDataBucketDCEA00F1"
+          }
+        ],
+        "/MuniRcmDatabaseStack/MuniRcmDataBucket/Notifications/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmDataBucketNotifications1433ED70"
+          }
+        ],
+        "/MuniRcmDatabaseStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+          }
+        ],
+        "/MuniRcmDatabaseStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36"
+          }
+        ],
+        "/MuniRcmDatabaseStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691"
+          }
+        ],
+        "/MuniRcmDatabaseStack/DatabaseSubnetGroup/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseSubnetGroup"
+          }
+        ],
+        "/MuniRcmDatabaseStack/DatabaseParameterGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseParameterGroupC9757D64"
+          }
+        ],
+        "/MuniRcmDatabaseStack/MuniRcmDatabase/MonitoringRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmDatabaseMonitoringRoleE7ECC5AA"
+          }
+        ],
+        "/MuniRcmDatabaseStack/MuniRcmDatabase/Secret/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmDatabaseStackMuniRcmDatabaseSecret0D627F883fdaad7efa858a3daf9490cf0a702aeb"
+          }
+        ],
+        "/MuniRcmDatabaseStack/MuniRcmDatabase/Secret/Attachment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmDatabaseSecretAttachment68139914"
+          }
+        ],
+        "/MuniRcmDatabaseStack/MuniRcmDatabase/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmDatabase6AE9AE94"
+          }
+        ],
+        "/MuniRcmDatabaseStack/SchemaInitFunction/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SchemaInitFunctionServiceRole7387DE8F"
+          }
+        ],
+        "/MuniRcmDatabaseStack/SchemaInitFunction/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SchemaInitFunctionServiceRoleDefaultPolicy90EDC037"
+          }
+        ],
+        "/MuniRcmDatabaseStack/SchemaInitFunction/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SchemaInitFunctionSecurityGroup1FA7704D"
+          }
+        ],
+        "/MuniRcmDatabaseStack/SchemaInitFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SchemaInitFunctionF50E110F"
+          }
+        ],
+        "/MuniRcmDatabaseStack/DatabaseEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DatabaseEndpoint"
+          }
+        ],
+        "/MuniRcmDatabaseStack/S3BucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "S3BucketName"
+          }
+        ],
+        "/MuniRcmDatabaseStack/KmsKeyId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "KmsKeyId"
+          }
+        ],
+        "/MuniRcmDatabaseStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/MuniRcmDatabaseStack/Exports/Output{\"Fn::GetAtt\":[\"MuniRcmDataBucketDCEA00F1\",\"Arn\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttMuniRcmDataBucketDCEA00F1Arn2048DE91"
+          }
+        ],
+        "/MuniRcmDatabaseStack/Exports/Output{\"Ref\":\"MuniRcmDatabaseSecretAttachment68139914\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefMuniRcmDatabaseSecretAttachment681399145DACB2BF"
+          }
+        ],
+        "/MuniRcmDatabaseStack/Exports/Output{\"Fn::GetAtt\":[\"MuniRcmDatabase6AE9AE94\",\"Endpoint.Address\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttMuniRcmDatabase6AE9AE94EndpointAddress9F2465EE"
+          }
+        ],
+        "/MuniRcmDatabaseStack/Exports/Output{\"Ref\":\"MuniRcmDataBucketDCEA00F1\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefMuniRcmDataBucketDCEA00F16D2E2186"
+          }
+        ],
+        "/MuniRcmDatabaseStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/MuniRcmDatabaseStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "MuniRcmDatabaseStack"
+    },
+    "MuniRcmAgentsStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "MuniRcmAgentsStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "MuniRcmAgentsStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://533266974264/us-east-1",
+      "properties": {
+        "templateFile": "MuniRcmAgentsStack.template.json",
+        "terminationProtection": false,
+        "tags": {
+          "Compliance": "HIPAA",
+          "CostCenter": "RCM-Platform",
+          "Environment": "development",
+          "Owner": "MuniHealth",
+          "Project": "MuniHealthRCM"
+        },
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-deploy-role-533266974264-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-cfn-exec-role-533266974264-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-533266974264-us-east-1/5141e576542af21eff78df0b6aec21935481bbaf0e0e99813c8f789bd7136c93.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "MuniRcmAgentsStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-lookup-role-533266974264-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "MuniRcmDatabaseStack",
+        "MuniRcmVpcStack",
+        "MuniRcmAgentsStack.assets"
+      ],
+      "metadata": {
+        "/MuniRcmAgentsStack": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Compliance",
+                "Value": "HIPAA"
+              },
+              {
+                "Key": "CostCenter",
+                "Value": "RCM-Platform"
+              },
+              {
+                "Key": "Environment",
+                "Value": "development"
+              },
+              {
+                "Key": "Owner",
+                "Value": "MuniHealth"
+              },
+              {
+                "Key": "Project",
+                "Value": "MuniHealthRCM"
+              }
+            ]
+          }
+        ],
+        "/MuniRcmAgentsStack/BaseAgentRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BaseAgentRole0EB73EAE"
+          }
+        ],
+        "/MuniRcmAgentsStack/CodingAgentRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CodingAgentRole712503F2"
+          }
+        ],
+        "/MuniRcmAgentsStack/CodingAgentRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CodingAgentRoleDefaultPolicy370BC4EF"
+          }
+        ],
+        "/MuniRcmAgentsStack/CodingAgentBasePolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CodingAgentBasePolicyA332EAAD"
+          }
+        ],
+        "/MuniRcmAgentsStack/CodingAgent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CodingAgent0BA105AC"
+          }
+        ],
+        "/MuniRcmAgentsStack/CodingAgent/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CodingAgentLogRetention55284BAE"
+          }
+        ],
+        "/MuniRcmAgentsStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+          }
+        ],
+        "/MuniRcmAgentsStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB"
+          }
+        ],
+        "/MuniRcmAgentsStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A"
+          }
+        ],
+        "/MuniRcmAgentsStack/ERAParserAgentRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ERAParserAgentRoleF09C82B7"
+          }
+        ],
+        "/MuniRcmAgentsStack/ERAParserAgentRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ERAParserAgentRoleDefaultPolicy4C67D522"
+          }
+        ],
+        "/MuniRcmAgentsStack/ERAParserBasePolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ERAParserBasePolicy2A1A5DA2"
+          }
+        ],
+        "/MuniRcmAgentsStack/ERAParserAgent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ERAParserAgentB2E8A337"
+          }
+        ],
+        "/MuniRcmAgentsStack/ERAParserAgent/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ERAParserAgentLogRetentionD24135D0"
+          }
+        ],
+        "/MuniRcmAgentsStack/SubmitClaimAgent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubmitClaimAgentA372EDAF"
+          }
+        ],
+        "/MuniRcmAgentsStack/SubmitClaimAgent/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubmitClaimAgentLogRetentionB1D4ECA2"
+          }
+        ],
+        "/MuniRcmAgentsStack/EligibilityAgent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EligibilityAgent7A2BB5BF"
+          }
+        ],
+        "/MuniRcmAgentsStack/EligibilityAgent/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EligibilityAgentLogRetentionB2BE31B8"
+          }
+        ],
+        "/MuniRcmAgentsStack/CodingAgentArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CodingAgentArn"
+          }
+        ],
+        "/MuniRcmAgentsStack/ERAParserAgentArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ERAParserAgentArn"
+          }
+        ],
+        "/MuniRcmAgentsStack/SubmitClaimAgentArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SubmitClaimAgentArn"
+          }
+        ],
+        "/MuniRcmAgentsStack/EligibilityAgentArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EligibilityAgentArn"
+          }
+        ],
+        "/MuniRcmAgentsStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/MuniRcmAgentsStack/Exports/Output{\"Fn::GetAtt\":[\"ERAParserAgentB2E8A337\",\"Arn\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttERAParserAgentB2E8A337ArnBEAB7335"
+          }
+        ],
+        "/MuniRcmAgentsStack/Exports/Output{\"Fn::GetAtt\":[\"CodingAgent0BA105AC\",\"Arn\"]}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputFnGetAttCodingAgent0BA105ACArn103E1381"
+          }
+        ],
+        "/MuniRcmAgentsStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/MuniRcmAgentsStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "MuniRcmAgentsStack"
+    },
+    "MuniRcmApiGatewayStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "MuniRcmApiGatewayStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "MuniRcmApiGatewayStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://533266974264/us-east-1",
+      "properties": {
+        "templateFile": "MuniRcmApiGatewayStack.template.json",
+        "terminationProtection": false,
+        "tags": {
+          "Compliance": "HIPAA",
+          "CostCenter": "RCM-Platform",
+          "Environment": "development",
+          "Owner": "MuniHealth",
+          "Project": "MuniHealthRCM"
+        },
+        "validateOnSynth": false,
+        "notificationArns": [],
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-deploy-role-533266974264-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-cfn-exec-role-533266974264-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-533266974264-us-east-1/85c5cfaf0b1ee6080127a52325bbe6f7d74bf7cecd2689900bf83e974584177c.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "MuniRcmApiGatewayStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-lookup-role-533266974264-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "MuniRcmAgentsStack",
+        "MuniRcmApiGatewayStack.assets"
+      ],
+      "metadata": {
+        "/MuniRcmApiGatewayStack": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Compliance",
+                "Value": "HIPAA"
+              },
+              {
+                "Key": "CostCenter",
+                "Value": "RCM-Platform"
+              },
+              {
+                "Key": "Environment",
+                "Value": "development"
+              },
+              {
+                "Key": "Owner",
+                "Value": "MuniHealth"
+              },
+              {
+                "Key": "Project",
+                "Value": "MuniHealthRCM"
+              }
+            ]
+          }
+        ],
+        "/MuniRcmApiGatewayStack/ApiGatewayLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiGatewayLogGroupA9770429"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApi6A5D8C1C"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiCloudWatchRoleCB26D768"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiAccount90E0D727"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiDeploymentCF2D031Ecd843a3805085c4a1b977650e17af635"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/DeploymentStage.v1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiDeploymentStagev111298677"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiEndpointAB65D1A4"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiOPTIONS158F1261"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookDD911271"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookOPTIONS3215B4A5"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookera1A737FD2"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookeraOPTIONS3373F739"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/POST/ApiPermission.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.era": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookeraPOSTApiPermissionMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookeraAB543EDA"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/POST/ApiPermission.Test.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.era": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookeraPOSTApiPermissionTestMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookera7CE1827C"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookeraPOST9AEBBEE8"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookdenialB843D21C"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookdenialOPTIONSA59FB991"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/POST/ApiPermission.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.denial": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookdenialPOSTApiPermissionMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookdenialC55043C3"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/POST/ApiPermission.Test.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.denial": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookdenialPOSTApiPermissionTestMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookdenialB369FDEA"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookdenialPOST2E4982AC"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookchart5A514075"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookchartOPTIONS057022C2"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/POST/ApiPermission.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.chart": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookchartPOSTApiPermissionMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookchart7D09A6BC"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/POST/ApiPermission.Test.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.chart": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookchartPOSTApiPermissionTestMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookchartED3E4F08"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiwebhookchartPOST23E570C2"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/health/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApihealthBA9C2902"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/health/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApihealthOPTIONS72D49FA4"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/health/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApihealthGET56836A2F"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/WebhooksApiKey/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiWebhooksApiKey3E652C97"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/WebhooksUsagePlan/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiWebhooksUsagePlanF2D833F1"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/MuniRcmWebhooksApi/WebhooksUsagePlan/UsagePlanKeyResource:MuniRcmApiGatewayStackMuniRcmWebhooksApiWebhooksApiKeyC5D2DA5E": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MuniRcmWebhooksApiWebhooksUsagePlanUsagePlanKeyResourceMuniRcmApiGatewayStackMuniRcmWebhooksApiWebhooksApiKeyC5D2DA5E7689C551"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/EraRequestValidator/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EraRequestValidator964FBE41"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/EraRequestModel/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EraRequestModelEEF5A885"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/ChartRequestValidator/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ChartRequestValidatorBC76E567"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/ChartRequestModel/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ChartRequestModelD9C15291"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/ApiGatewayUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiGatewayUrl"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/ApiKeyId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiKeyId"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/MuniRcmApiGatewayStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "MuniRcmApiGatewayStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

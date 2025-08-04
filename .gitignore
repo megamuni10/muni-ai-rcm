@@ -48,3 +48,4 @@ node_modules
 app/node_modules
 infra/node_modules
 */node_modules
+*.node

@@ -1,0 +1,1269 @@
+{
+ "Description": "API Gateway for external webhooks",
+ "Resources": {
+  "ApiGatewayLogGroupA9770429": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/aws/apigateway/muni-rcm-webhooks",
+    "RetentionInDays": 30,
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/ApiGatewayLogGroup/Resource"
+   }
+  },
+  "MuniRcmWebhooksApi6A5D8C1C": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "API Gateway for external system webhooks (Claim.MD, EHR systems)",
+    "Name": "Muni RCM Webhooks API",
+    "Policy": {
+     "Statement": [
+      {
+       "Action": "execute-api:Invoke",
+       "Condition": {
+        "IpAddress": {
+         "aws:SourceIp": [
+          "0.0.0.0/0"
+         ]
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiCloudWatchRoleCB26D768": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/CloudWatchRole/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiAccount90E0D727": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "MuniRcmWebhooksApiCloudWatchRoleCB26D768",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "MuniRcmWebhooksApi6A5D8C1C"
+   ],
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Account"
+   }
+  },
+  "MuniRcmWebhooksApiDeploymentCF2D031Ecd843a3805085c4a1b977650e17af635": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "API Gateway for external system webhooks (Claim.MD, EHR systems)",
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "DependsOn": [
+    "ChartRequestModelD9C15291",
+    "ChartRequestValidatorBC76E567",
+    "EraRequestModelEEF5A885",
+    "EraRequestValidator964FBE41",
+    "MuniRcmWebhooksApihealthGET56836A2F",
+    "MuniRcmWebhooksApihealthOPTIONS72D49FA4",
+    "MuniRcmWebhooksApihealthBA9C2902",
+    "MuniRcmWebhooksApiOPTIONS158F1261",
+    "MuniRcmWebhooksApiwebhookchartOPTIONS057022C2",
+    "MuniRcmWebhooksApiwebhookchartPOST23E570C2",
+    "MuniRcmWebhooksApiwebhookchart5A514075",
+    "MuniRcmWebhooksApiwebhookdenialOPTIONSA59FB991",
+    "MuniRcmWebhooksApiwebhookdenialPOST2E4982AC",
+    "MuniRcmWebhooksApiwebhookdenialB843D21C",
+    "MuniRcmWebhooksApiwebhookeraOPTIONS3373F739",
+    "MuniRcmWebhooksApiwebhookeraPOST9AEBBEE8",
+    "MuniRcmWebhooksApiwebhookera1A737FD2",
+    "MuniRcmWebhooksApiwebhookOPTIONS3215B4A5",
+    "MuniRcmWebhooksApiwebhookDD911271"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Deployment/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiDeploymentStagev111298677": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "AccessLogSetting": {
+     "DestinationArn": {
+      "Fn::GetAtt": [
+       "ApiGatewayLogGroupA9770429",
+       "Arn"
+      ]
+     },
+     "Format": "{\"requestId\":\"$context.requestId\",\"ip\":\"$context.identity.sourceIp\",\"user\":\"$context.identity.user\",\"caller\":\"$context.identity.caller\",\"requestTime\":\"$context.requestTime\",\"httpMethod\":\"$context.httpMethod\",\"resourcePath\":\"$context.resourcePath\",\"status\":\"$context.status\",\"protocol\":\"$context.protocol\",\"responseLength\":\"$context.responseLength\"}"
+    },
+    "DeploymentId": {
+     "Ref": "MuniRcmWebhooksApiDeploymentCF2D031Ecd843a3805085c4a1b977650e17af635"
+    },
+    "MethodSettings": [
+     {
+      "DataTraceEnabled": true,
+      "HttpMethod": "*",
+      "LoggingLevel": "INFO",
+      "ResourcePath": "/*"
+     }
+    ],
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    },
+    "StageName": "v1",
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "DependsOn": [
+    "MuniRcmWebhooksApiAccount90E0D727"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/DeploymentStage.v1/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiOPTIONS158F1261": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "MuniRcmWebhooksApi6A5D8C1C",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/OPTIONS/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookDD911271": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "MuniRcmWebhooksApi6A5D8C1C",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "webhook",
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookOPTIONS3215B4A5": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "MuniRcmWebhooksApiwebhookDD911271"
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/OPTIONS/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookera1A737FD2": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "MuniRcmWebhooksApiwebhookDD911271"
+    },
+    "PathPart": "era",
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookeraOPTIONS3373F739": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "MuniRcmWebhooksApiwebhookera1A737FD2"
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/OPTIONS/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookeraPOSTApiPermissionMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookeraAB543EDA": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::ImportValue": "MuniRcmAgentsStack:ExportsOutputFnGetAttERAParserAgentB2E8A337ArnBEAB7335"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:533266974264:",
+       {
+        "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+       },
+       "/",
+       {
+        "Ref": "MuniRcmWebhooksApiDeploymentStagev111298677"
+       },
+       "/POST/webhook/era"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/POST/ApiPermission.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.era"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookeraPOSTApiPermissionTestMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookera7CE1827C": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::ImportValue": "MuniRcmAgentsStack:ExportsOutputFnGetAttERAParserAgentB2E8A337ArnBEAB7335"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:533266974264:",
+       {
+        "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+       },
+       "/test-invoke-stage/POST/webhook/era"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/POST/ApiPermission.Test.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.era"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookeraPOST9AEBBEE8": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::ImportValue": "MuniRcmAgentsStack:ExportsOutputFnGetAttERAParserAgentB2E8A337ArnBEAB7335"
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "RequestModels": {
+     "application/json": {
+      "Ref": "EraRequestModelEEF5A885"
+     }
+    },
+    "RequestValidatorId": {
+     "Ref": "EraRequestValidator964FBE41"
+    },
+    "ResourceId": {
+     "Ref": "MuniRcmWebhooksApiwebhookera1A737FD2"
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/era/POST/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookdenialB843D21C": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "MuniRcmWebhooksApiwebhookDD911271"
+    },
+    "PathPart": "denial",
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookdenialOPTIONSA59FB991": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "MuniRcmWebhooksApiwebhookdenialB843D21C"
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/OPTIONS/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookdenialPOSTApiPermissionMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookdenialC55043C3": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::ImportValue": "MuniRcmAgentsStack:ExportsOutputFnGetAttERAParserAgentB2E8A337ArnBEAB7335"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:533266974264:",
+       {
+        "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+       },
+       "/",
+       {
+        "Ref": "MuniRcmWebhooksApiDeploymentStagev111298677"
+       },
+       "/POST/webhook/denial"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/POST/ApiPermission.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.denial"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookdenialPOSTApiPermissionTestMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookdenialB369FDEA": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::ImportValue": "MuniRcmAgentsStack:ExportsOutputFnGetAttERAParserAgentB2E8A337ArnBEAB7335"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:533266974264:",
+       {
+        "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+       },
+       "/test-invoke-stage/POST/webhook/denial"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/POST/ApiPermission.Test.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.denial"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookdenialPOST2E4982AC": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::ImportValue": "MuniRcmAgentsStack:ExportsOutputFnGetAttERAParserAgentB2E8A337ArnBEAB7335"
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "MuniRcmWebhooksApiwebhookdenialB843D21C"
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/denial/POST/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookchart5A514075": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "MuniRcmWebhooksApiwebhookDD911271"
+    },
+    "PathPart": "chart",
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookchartOPTIONS057022C2": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "MuniRcmWebhooksApiwebhookchart5A514075"
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/OPTIONS/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookchartPOSTApiPermissionMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookchart7D09A6BC": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::ImportValue": "MuniRcmAgentsStack:ExportsOutputFnGetAttCodingAgent0BA105ACArn103E1381"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:533266974264:",
+       {
+        "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+       },
+       "/",
+       {
+        "Ref": "MuniRcmWebhooksApiDeploymentStagev111298677"
+       },
+       "/POST/webhook/chart"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/POST/ApiPermission.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.chart"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookchartPOSTApiPermissionTestMuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3POSTwebhookchartED3E4F08": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::ImportValue": "MuniRcmAgentsStack:ExportsOutputFnGetAttCodingAgent0BA105ACArn103E1381"
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:533266974264:",
+       {
+        "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+       },
+       "/test-invoke-stage/POST/webhook/chart"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/POST/ApiPermission.Test.MuniRcmApiGatewayStackMuniRcmWebhooksApi12C6F2F3.POST..webhook.chart"
+   }
+  },
+  "MuniRcmWebhooksApiwebhookchartPOST23E570C2": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::ImportValue": "MuniRcmAgentsStack:ExportsOutputFnGetAttCodingAgent0BA105ACArn103E1381"
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "RequestModels": {
+     "application/json": {
+      "Ref": "ChartRequestModelD9C15291"
+     }
+    },
+    "RequestValidatorId": {
+     "Ref": "ChartRequestValidatorBC76E567"
+    },
+    "ResourceId": {
+     "Ref": "MuniRcmWebhooksApiwebhookchart5A514075"
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/webhook/chart/POST/Resource"
+   }
+  },
+  "MuniRcmWebhooksApihealthBA9C2902": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "MuniRcmWebhooksApi6A5D8C1C",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "health",
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/health/Resource"
+   }
+  },
+  "MuniRcmWebhooksApihealthOPTIONS72D49FA4": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "MuniRcmWebhooksApihealthBA9C2902"
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/health/OPTIONS/Resource"
+   }
+  },
+  "MuniRcmWebhooksApihealthGET56836A2F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseTemplates": {
+        "application/json": "{\"status\":\"healthy\",\"timestamp\":\"$context.requestTime\",\"version\":\"v1\"}"
+       },
+       "StatusCode": "200"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{\"statusCode\": 200}"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseModels": {
+       "application/json": "Empty"
+      },
+      "StatusCode": "200"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "MuniRcmWebhooksApihealthBA9C2902"
+    },
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/Default/health/GET/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiWebhooksApiKey3E652C97": {
+   "Type": "AWS::ApiGateway::ApiKey",
+   "Properties": {
+    "Description": "API key for Muni RCM webhook endpoints",
+    "Enabled": true,
+    "Name": "muni-rcm-webhooks-key",
+    "StageKeys": [
+     {
+      "RestApiId": {
+       "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+      },
+      "StageName": {
+       "Ref": "MuniRcmWebhooksApiDeploymentStagev111298677"
+      }
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/WebhooksApiKey/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiWebhooksUsagePlanF2D833F1": {
+   "Type": "AWS::ApiGateway::UsagePlan",
+   "Properties": {
+    "ApiStages": [
+     {
+      "ApiId": {
+       "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+      },
+      "Stage": {
+       "Ref": "MuniRcmWebhooksApiDeploymentStagev111298677"
+      },
+      "Throttle": {}
+     }
+    ],
+    "Description": "Usage plan for webhook endpoints",
+    "Quota": {
+     "Limit": 10000,
+     "Period": "MONTH"
+    },
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "Throttle": {
+     "BurstLimit": 200,
+     "RateLimit": 100
+    },
+    "UsagePlanName": "Muni RCM Webhooks Usage Plan"
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/WebhooksUsagePlan/Resource"
+   }
+  },
+  "MuniRcmWebhooksApiWebhooksUsagePlanUsagePlanKeyResourceMuniRcmApiGatewayStackMuniRcmWebhooksApiWebhooksApiKeyC5D2DA5E7689C551": {
+   "Type": "AWS::ApiGateway::UsagePlanKey",
+   "Properties": {
+    "KeyId": {
+     "Ref": "MuniRcmWebhooksApiWebhooksApiKey3E652C97"
+    },
+    "KeyType": "API_KEY",
+    "UsagePlanId": {
+     "Ref": "MuniRcmWebhooksApiWebhooksUsagePlanF2D833F1"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/MuniRcmWebhooksApi/WebhooksUsagePlan/UsagePlanKeyResource:MuniRcmApiGatewayStackMuniRcmWebhooksApiWebhooksApiKeyC5D2DA5E"
+   }
+  },
+  "EraRequestValidator964FBE41": {
+   "Type": "AWS::ApiGateway::RequestValidator",
+   "Properties": {
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    },
+    "ValidateRequestBody": true,
+    "ValidateRequestParameters": true
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/EraRequestValidator/Resource"
+   }
+  },
+  "EraRequestModelEEF5A885": {
+   "Type": "AWS::ApiGateway::Model",
+   "Properties": {
+    "ContentType": "application/json",
+    "Description": "Model for ERA webhook requests",
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    },
+    "Schema": {
+     "type": "object",
+     "required": [
+      "eraFileUrl",
+      "source"
+     ],
+     "properties": {
+      "eraFileUrl": {
+       "type": "string",
+       "description": "S3 URL to the 835 ERA file"
+      },
+      "source": {
+       "type": "string",
+       "description": "Source system (e.g., Claim.MD)",
+       "enum": [
+        "Claim.MD",
+        "manual_upload",
+        "direct_payer"
+       ]
+      },
+      "claimIds": {
+       "type": "array",
+       "description": "List of claim IDs to process",
+       "items": {
+        "type": "string"
+       }
+      },
+      "metadata": {
+       "type": "object",
+       "description": "Additional metadata",
+       "properties": {
+        "payerName": {
+         "type": "string"
+        },
+        "paymentDate": {
+         "type": "string"
+        },
+        "totalAmount": {
+         "type": "number"
+        }
+       }
+      }
+     },
+     "$schema": "http://json-schema.org/draft-04/schema#"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/EraRequestModel/Resource"
+   }
+  },
+  "ChartRequestValidatorBC76E567": {
+   "Type": "AWS::ApiGateway::RequestValidator",
+   "Properties": {
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    },
+    "ValidateRequestBody": true
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/ChartRequestValidator/Resource"
+   }
+  },
+  "ChartRequestModelD9C15291": {
+   "Type": "AWS::ApiGateway::Model",
+   "Properties": {
+    "ContentType": "application/json",
+    "Description": "Model for chart/EHR webhook requests",
+    "RestApiId": {
+     "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+    },
+    "Schema": {
+     "type": "object",
+     "required": [
+      "patientId",
+      "encounterId"
+     ],
+     "properties": {
+      "patientId": {
+       "type": "string",
+       "description": "Patient identifier"
+      },
+      "encounterId": {
+       "type": "string",
+       "description": "Encounter identifier"
+      },
+      "chartNotes": {
+       "type": "string",
+       "description": "Clinical documentation"
+      },
+      "source": {
+       "type": "string",
+       "description": "EHR system source",
+       "enum": [
+        "1upHealth",
+        "Epic",
+        "Cerner",
+        "AllScripts"
+       ]
+      },
+      "metadata": {
+       "type": "object",
+       "description": "Additional encounter metadata",
+       "properties": {
+        "visitType": {
+         "type": "string"
+        },
+        "provider": {
+         "type": "string"
+        },
+        "dateOfService": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "$schema": "http://json-schema.org/draft-04/schema#"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/ChartRequestModel/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/22OQU/DMAyFf8vuaViHBOcyJA4wMXWCK/Iar2RL41A7VFXV/46yblJBnPy95yf7rXR+d6vzBXScVeaUObvXw06gOino+GNwVLMeXqh+aikGtT74K48Kgq1BsINeDyWyFMGmwAyLqqLoRT1icNQ36CW5M7UTqDF5E5TIFNsKH4BRbVA+yaTlha7by5OJi2CfsT8/m+iNocatA5+8/0WKlfgVkeUdnDUg1E5H/3gbMujODRKMykKjh5LcVIEcjspBszeg1we/xbaxzJb8+Kvqa5QQZV56VJ4M6iPffK+WOr/Xy8WRrc3a6MU2qMtp/gAK5ka/nAEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmApiGatewayStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "MuniRcmWebhooksApiEndpointAB65D1A4": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "MuniRcmWebhooksApiDeploymentStagev111298677"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "ApiGatewayUrl": {
+   "Description": "API Gateway URL for webhooks",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "MuniRcmWebhooksApi6A5D8C1C"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "MuniRcmWebhooksApiDeploymentStagev111298677"
+      },
+      "/"
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "MuniRcm-ApiGatewayUrl"
+   }
+  },
+  "ApiKeyId": {
+   "Description": "API Key ID for webhook authentication",
+   "Value": {
+    "Ref": "MuniRcmWebhooksApiWebhooksApiKey3E652C97"
+   },
+   "Export": {
+    "Name": "MuniRcm-ApiKeyId"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

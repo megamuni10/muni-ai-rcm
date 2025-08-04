@@ -1,0 +1,20 @@
+{
+  "version": "38.0.1",
+  "files": {
+    "a976bc2c652f9fd32615cb6c5cd95871f8bbd88df3f5b5aa3dc991e720d34082": {
+      "source": {
+        "path": "MuniRcmSecurityStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "533266974264-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-533266974264-us-east-1",
+          "objectKey": "a976bc2c652f9fd32615cb6c5cd95871f8bbd88df3f5b5aa3dc991e720d34082.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::533266974264:role/cdk-hnb659fds-file-publishing-role-533266974264-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

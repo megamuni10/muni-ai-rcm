@@ -1,0 +1,1019 @@
+{
+ "Description": "RDS and S3 resources for Muni Health RCM platform",
+ "Resources": {
+  "MuniRcmEncryptionKey35CCED6D": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "Description": "KMS key for Muni Health RCM platform encryption",
+    "EnableKeyRotation": true,
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::533266974264:root"
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "KeySpec": "SYMMETRIC_DEFAULT",
+    "KeyUsage": "ENCRYPT_DECRYPT",
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/MuniRcmEncryptionKey/Resource"
+   }
+  },
+  "MuniRcmAccessLogsBucket051B4065": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "BucketName": "muni-rcm-access-logs-533266974264-us-east-1",
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "ExpirationInDays": 365,
+       "Id": "DeleteAccessLogs",
+       "Status": "Enabled"
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/MuniRcmAccessLogsBucket/Resource"
+   }
+  },
+  "MuniRcmAccessLogsBucketPolicyA6B6CFD2": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "MuniRcmAccessLogsBucket051B4065"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:PutObject",
+       "Condition": {
+        "ArnLike": {
+         "aws:SourceArn": {
+          "Fn::GetAtt": [
+           "MuniRcmDataBucketDCEA00F1",
+           "Arn"
+          ]
+         }
+        },
+        "StringEquals": {
+         "aws:SourceAccount": "533266974264"
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "logging.s3.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "MuniRcmAccessLogsBucket051B4065",
+            "Arn"
+           ]
+          },
+          "/access-logs/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/MuniRcmAccessLogsBucket/Policy/Resource"
+   }
+  },
+  "MuniRcmDataBucketDCEA00F1": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "KMSMasterKeyID": {
+         "Fn::GetAtt": [
+          "MuniRcmEncryptionKey35CCED6D",
+          "Arn"
+         ]
+        },
+        "SSEAlgorithm": "aws:kms"
+       }
+      }
+     ]
+    },
+    "BucketName": "muni-rcm-data-533266974264-us-east-1",
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "Id": "DeleteOldVersions",
+       "NoncurrentVersionExpiration": {
+        "NoncurrentDays": 90
+       },
+       "Status": "Enabled"
+      },
+      {
+       "Id": "TransitionToIA",
+       "Status": "Enabled",
+       "Transitions": [
+        {
+         "StorageClass": "STANDARD_IA",
+         "TransitionInDays": 30
+        },
+        {
+         "StorageClass": "GLACIER",
+         "TransitionInDays": 90
+        }
+       ]
+      }
+     ]
+    },
+    "LoggingConfiguration": {
+     "DestinationBucketName": {
+      "Ref": "MuniRcmAccessLogsBucket051B4065"
+     },
+     "LogFilePrefix": "access-logs/"
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VersioningConfiguration": {
+     "Status": "Enabled"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/MuniRcmDataBucket/Resource"
+   }
+  },
+  "MuniRcmDataBucketNotifications1433ED70": {
+   "Type": "Custom::S3BucketNotifications",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "MuniRcmDataBucketDCEA00F1"
+    },
+    "NotificationConfiguration": {
+     "EventBridgeConfiguration": {}
+    },
+    "Managed": true,
+    "SkipDestinationValidation": false
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/MuniRcmDataBucket/Notifications/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:PutBucketNotification",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+    "Roles": [
+     {
+      "Ref": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/DefaultPolicy/Resource"
+   }
+  },
+  "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Description": "AWS CloudFormation handler for \"Custom::S3BucketNotifications\" resources (@aws-cdk/aws-s3)",
+    "Code": {
+     "ZipFile": "import boto3  # type: ignore\nimport json\nimport logging\nimport urllib.request\n\ns3 = boto3.client(\"s3\")\n\nEVENTBRIDGE_CONFIGURATION = 'EventBridgeConfiguration'\nCONFIGURATION_TYPES = [\"TopicConfigurations\", \"QueueConfigurations\", \"LambdaFunctionConfigurations\"]\n\ndef handler(event: dict, context):\n  response_status = \"SUCCESS\"\n  error_message = \"\"\n  try:\n    props = event[\"ResourceProperties\"]\n    notification_configuration = props[\"NotificationConfiguration\"]\n    managed = props.get('Managed', 'true').lower() == 'true'\n    skipDestinationValidation = props.get('SkipDestinationValidation', 'false').lower() == 'true'\n    stack_id = event['StackId']\n    old = event.get(\"OldResourceProperties\", {}).get(\"NotificationConfiguration\", {})\n    if managed:\n      config = handle_managed(event[\"RequestType\"], notification_configuration)\n    else:\n      config = handle_unmanaged(props[\"BucketName\"], stack_id, event[\"RequestType\"], notification_configuration, old)\n    s3.put_bucket_notification_configuration(Bucket=props[\"BucketName\"], NotificationConfiguration=config, SkipDestinationValidation=skipDestinationValidation)\n  except Exception as e:\n    logging.exception(\"Failed to put bucket notification configuration\")\n    response_status = \"FAILED\"\n    error_message = f\"Error: {str(e)}. \"\n  finally:\n    submit_response(event, context, response_status, error_message)\n\ndef handle_managed(request_type, notification_configuration):\n  if request_type == 'Delete':\n    return {}\n  return notification_configuration\n\ndef handle_unmanaged(bucket, stack_id, request_type, notification_configuration, old):\n  def get_id(n):\n    n['Id'] = ''\n    sorted_notifications = sort_filter_rules(n)\n    strToHash=json.dumps(sorted_notifications, sort_keys=True).replace('\"Name\": \"prefix\"', '\"Name\": \"Prefix\"').replace('\"Name\": \"suffix\"', '\"Name\": \"Suffix\"')\n    return f\"{stack_id}-{hash(strToHash)}\"\n  def with_id(n):\n    n['Id'] = get_id(n)\n    return n\n\n  external_notifications = {}\n  existing_notifications = s3.get_bucket_notification_configuration(Bucket=bucket)\n  for t in CONFIGURATION_TYPES:\n    if request_type == 'Update':\n        old_incoming_ids = [get_id(n) for n in old.get(t, [])]\n        external_notifications[t] = [n for n in existing_notifications.get(t, []) if not get_id(n) in old_incoming_ids]      \n    elif request_type == 'Delete':\n        external_notifications[t] = [n for n in existing_notifications.get(t, []) if not n['Id'].startswith(f\"{stack_id}-\")]\n    elif request_type == 'Create':\n        external_notifications[t] = [n for n in existing_notifications.get(t, [])]\n  if EVENTBRIDGE_CONFIGURATION in existing_notifications:\n    external_notifications[EVENTBRIDGE_CONFIGURATION] = existing_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  if request_type == 'Delete':\n    return external_notifications\n\n  notifications = {}\n  for t in CONFIGURATION_TYPES:\n    external = external_notifications.get(t, [])\n    incoming = [with_id(n) for n in notification_configuration.get(t, [])]\n    notifications[t] = external + incoming\n\n  if EVENTBRIDGE_CONFIGURATION in notification_configuration:\n    notifications[EVENTBRIDGE_CONFIGURATION] = notification_configuration[EVENTBRIDGE_CONFIGURATION]\n  elif EVENTBRIDGE_CONFIGURATION in external_notifications:\n    notifications[EVENTBRIDGE_CONFIGURATION] = external_notifications[EVENTBRIDGE_CONFIGURATION]\n\n  return notifications\n\ndef submit_response(event: dict, context, response_status: str, error_message: str):\n  response_body = json.dumps(\n    {\n      \"Status\": response_status,\n      \"Reason\": f\"{error_message}See the details in CloudWatch Log Stream: {context.log_stream_name}\",\n      \"PhysicalResourceId\": event.get(\"PhysicalResourceId\") or event[\"LogicalResourceId\"],\n      \"StackId\": event[\"StackId\"],\n      \"RequestId\": event[\"RequestId\"],\n      \"LogicalResourceId\": event[\"LogicalResourceId\"],\n      \"NoEcho\": False,\n    }\n  ).encode(\"utf-8\")\n  headers = {\"content-type\": \"\", \"content-length\": str(len(response_body))}\n  try:\n    req = urllib.request.Request(url=event[\"ResponseURL\"], headers=headers, data=response_body, method=\"PUT\")\n    with urllib.request.urlopen(req) as response:\n      print(response.read().decode(\"utf-8\"))\n    print(\"Status code: \" + response.reason)\n  except Exception as e:\n      print(\"send(..) failed executing request.urlopen(..): \" + str(e))\n\ndef sort_filter_rules(json_obj):\n  if not isinstance(json_obj, dict):\n      return json_obj\n  for key, value in json_obj.items():\n      if isinstance(value, dict):\n          json_obj[key] = sort_filter_rules(value)\n      elif isinstance(value, list):\n          json_obj[key] = [sort_filter_rules(item) for item in value]\n  if \"Filter\" in json_obj and \"Key\" in json_obj[\"Filter\"] and \"FilterRules\" in json_obj[\"Filter\"][\"Key\"]:\n      filter_rules = json_obj[\"Filter\"][\"Key\"][\"FilterRules\"]\n      sorted_filter_rules = sorted(filter_rules, key=lambda x: x[\"Name\"])\n      json_obj[\"Filter\"][\"Key\"][\"FilterRules\"] = sorted_filter_rules\n  return json_obj"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 300,
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "DependsOn": [
+    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleDefaultPolicy2CF63D36",
+    "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource"
+   }
+  },
+  "DatabaseSubnetGroup": {
+   "Type": "AWS::RDS::DBSubnetGroup",
+   "Properties": {
+    "DBSubnetGroupDescription": "Subnet group for RDS PostgreSQL database",
+    "SubnetIds": [
+     {
+      "Fn::ImportValue": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcDatabaseSubnet1Subnet20848FB48580EF45"
+     },
+     {
+      "Fn::ImportValue": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcDatabaseSubnet2Subnet421AE6704AC8DAAA"
+     },
+     {
+      "Fn::ImportValue": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcDatabaseSubnet3Subnet6E4404C9D174C067"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/DatabaseSubnetGroup/Default"
+   }
+  },
+  "DatabaseParameterGroupC9757D64": {
+   "Type": "AWS::RDS::DBParameterGroup",
+   "Properties": {
+    "Description": "Parameter group for Muni RCM PostgreSQL database",
+    "Family": "postgres15",
+    "Parameters": {
+     "shared_preload_libraries": "pg_stat_statements",
+     "log_statement": "all",
+     "log_min_duration_statement": "1000",
+     "max_connections": "200"
+    },
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/DatabaseParameterGroup/Resource"
+   }
+  },
+  "MuniRcmDatabaseMonitoringRoleE7ECC5AA": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "monitoring.rds.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/MuniRcmDatabase/MonitoringRole/Resource"
+   }
+  },
+  "MuniRcmDatabaseStackMuniRcmDatabaseSecret0D627F883fdaad7efa858a3daf9490cf0a702aeb": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Generated by the CDK for stack: ",
+       {
+        "Ref": "AWS::StackName"
+       }
+      ]
+     ]
+    },
+    "GenerateSecretString": {
+     "ExcludeCharacters": " %+~`#$&*()|[]{}:;<>?!'/@\"\\",
+     "GenerateStringKey": "password",
+     "PasswordLength": 30,
+     "SecretStringTemplate": "{\"username\":\"postgres\"}"
+    },
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/MuniRcmDatabase/Secret/Resource"
+   }
+  },
+  "MuniRcmDatabaseSecretAttachment68139914": {
+   "Type": "AWS::SecretsManager::SecretTargetAttachment",
+   "Properties": {
+    "SecretId": {
+     "Ref": "MuniRcmDatabaseStackMuniRcmDatabaseSecret0D627F883fdaad7efa858a3daf9490cf0a702aeb"
+    },
+    "TargetId": {
+     "Ref": "MuniRcmDatabase6AE9AE94"
+    },
+    "TargetType": "AWS::RDS::DBInstance"
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/MuniRcmDatabase/Secret/Attachment/Resource"
+   }
+  },
+  "MuniRcmDatabase6AE9AE94": {
+   "Type": "AWS::RDS::DBInstance",
+   "Properties": {
+    "AllocatedStorage": "20",
+    "AutoMinorVersionUpgrade": true,
+    "BackupRetentionPeriod": 7,
+    "CopyTagsToSnapshot": true,
+    "DBInstanceClass": "db.t3.micro",
+    "DBName": "muni_rcm",
+    "DBParameterGroupName": {
+     "Ref": "DatabaseParameterGroupC9757D64"
+    },
+    "DBSubnetGroupName": {
+     "Ref": "DatabaseSubnetGroup"
+    },
+    "DeleteAutomatedBackups": false,
+    "DeletionProtection": true,
+    "EnablePerformanceInsights": true,
+    "Engine": "postgres",
+    "EngineVersion": "15.4",
+    "KmsKeyId": {
+     "Fn::GetAtt": [
+      "MuniRcmEncryptionKey35CCED6D",
+      "Arn"
+     ]
+    },
+    "MasterUserPassword": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:",
+       {
+        "Ref": "MuniRcmDatabaseStackMuniRcmDatabaseSecret0D627F883fdaad7efa858a3daf9490cf0a702aeb"
+       },
+       ":SecretString:password::}}"
+      ]
+     ]
+    },
+    "MasterUsername": "postgres",
+    "MaxAllocatedStorage": 100,
+    "MonitoringInterval": 60,
+    "MonitoringRoleArn": {
+     "Fn::GetAtt": [
+      "MuniRcmDatabaseMonitoringRoleE7ECC5AA",
+      "Arn"
+     ]
+    },
+    "MultiAZ": false,
+    "PerformanceInsightsKMSKeyId": {
+     "Fn::GetAtt": [
+      "MuniRcmEncryptionKey35CCED6D",
+      "Arn"
+     ]
+    },
+    "PerformanceInsightsRetentionPeriod": 31,
+    "PreferredBackupWindow": "03:00-04:00",
+    "PreferredMaintenanceWindow": "sun:04:00-sun:05:00",
+    "StorageEncrypted": true,
+    "StorageType": "gp2",
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VPCSecurityGroups": [
+     {
+      "Fn::ImportValue": "MuniRcm-DatabaseSecurityGroup"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Snapshot",
+   "DeletionPolicy": "Snapshot",
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/MuniRcmDatabase/Resource"
+   }
+  },
+  "SchemaInitFunctionServiceRole7387DE8F": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     },
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/SchemaInitFunction/ServiceRole/Resource"
+   }
+  },
+  "SchemaInitFunctionServiceRoleDefaultPolicy90EDC037": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "MuniRcmDatabaseSecretAttachment68139914"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "SchemaInitFunctionServiceRoleDefaultPolicy90EDC037",
+    "Roles": [
+     {
+      "Ref": "SchemaInitFunctionServiceRole7387DE8F"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/SchemaInitFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "SchemaInitFunctionSecurityGroup1FA7704D": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Automatic security group for Lambda Function MuniRcmDatabaseStackSchemaInitFunctionF77A8FB3",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcId": {
+     "Fn::ImportValue": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpc94D5ED2267A97763"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/SchemaInitFunction/SecurityGroup/Resource"
+   }
+  },
+  "SchemaInitFunctionF50E110F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "ZipFile": "\nimport json\nimport psycopg2\nimport boto3\n\ndef handler(event, context):\n    # Get database credentials from Secrets Manager\n    secrets_client = boto3.client('secretsmanager')\n    secret_value = secrets_client.get_secret_value(SecretId='muni-rcm/rds-credentials')\n    db_credentials = json.loads(secret_value['SecretString'])\n    \n    # Connect to database\n    conn = psycopg2.connect(\n        host=event['host'],\n        database=event['database'],\n        user=db_credentials['username'],\n        password=db_credentials['password'],\n        port=5432\n    )\n    \n    # Create tables\n    with conn.cursor() as cur:\n        # Agent runs table\n        cur.execute('''\n            CREATE TABLE IF NOT EXISTS agent_runs (\n                id SERIAL PRIMARY KEY,\n                agent_name VARCHAR(100) NOT NULL,\n                input_data JSONB,\n                output_data JSONB,\n                error_message TEXT,\n                status VARCHAR(50) NOT NULL,\n                patient_id VARCHAR(100),\n                claim_id VARCHAR(100),\n                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n            );\n        ''')\n        \n        # Claims table\n        cur.execute('''\n            CREATE TABLE IF NOT EXISTS claims (\n                id SERIAL PRIMARY KEY,\n                claim_id VARCHAR(100) UNIQUE NOT NULL,\n                patient_id VARCHAR(100) NOT NULL,\n                provider_id VARCHAR(100),\n                payer_id VARCHAR(100),\n                status VARCHAR(50) NOT NULL,\n                total_amount DECIMAL(10,2),\n                paid_amount DECIMAL(10,2) DEFAULT 0,\n                submission_date TIMESTAMP,\n                payment_date TIMESTAMP,\n                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n            );\n        ''')\n        \n        # Patients table\n        cur.execute('''\n            CREATE TABLE IF NOT EXISTS patients (\n                id SERIAL PRIMARY KEY,\n                patient_id VARCHAR(100) UNIQUE NOT NULL,\n                first_name VARCHAR(100),\n                last_name VARCHAR(100),\n                date_of_birth DATE,\n                insurance_id VARCHAR(100),\n                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n            );\n        ''')\n    \n    conn.commit()\n    conn.close()\n    \n    return {'statusCode': 200, 'body': 'Schema initialized successfully'}\n      "
+    },
+    "Environment": {
+     "Variables": {
+      "DB_HOST": {
+       "Fn::GetAtt": [
+        "MuniRcmDatabase6AE9AE94",
+        "Endpoint.Address"
+       ]
+      },
+      "DB_NAME": "muni_rcm"
+     }
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "SchemaInitFunctionServiceRole7387DE8F",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Tags": [
+     {
+      "Key": "Compliance",
+      "Value": "HIPAA"
+     },
+     {
+      "Key": "CostCenter",
+      "Value": "RCM-Platform"
+     },
+     {
+      "Key": "Environment",
+      "Value": "development"
+     },
+     {
+      "Key": "Owner",
+      "Value": "MuniHealth"
+     },
+     {
+      "Key": "Project",
+      "Value": "MuniHealthRCM"
+     }
+    ],
+    "VpcConfig": {
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "SchemaInitFunctionSecurityGroup1FA7704D",
+        "GroupId"
+       ]
+      }
+     ],
+     "SubnetIds": [
+      {
+       "Fn::ImportValue": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcPrivateSubnet1Subnet394E87F1B402678E"
+      },
+      {
+       "Fn::ImportValue": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcPrivateSubnet2Subnet7ADE5552F72344C2"
+      },
+      {
+       "Fn::ImportValue": "MuniRcmVpcStack:ExportsOutputRefMuniRcmVpcPrivateSubnet3Subnet85CF6DAF17582F0B"
+      }
+     ]
+    }
+   },
+   "DependsOn": [
+    "SchemaInitFunctionServiceRoleDefaultPolicy90EDC037",
+    "SchemaInitFunctionServiceRole7387DE8F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/SchemaInitFunction/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/22QQU/DMAyFf8vumVk7Cc60EwjtwLRyR27qjaxNOiUOUxXlv6O2azcQp/f8vWfJcgrJ4xqSBV7cUlb1slElhIJR1gIv7jPU2kHYUifyg9lSF4VbQ8i8rIl7dHWj7NpGye6GxzkKhRrCvm2ojwa9NaeOrRyEwpeG+NW2/txnm+we7NCiJiZ7l/9hG2Qs0dGbcYxG0gwKknY8eJNNYRRuoE6jwSNZCPnBXIujfKA9Ej8zo/zSZIb9/5MoGtRlhRBevJGsWtN3Jx8FyRRCQdJbxd18/y8Q4/Adcq23ksRs8oN593z2HIVpK4KTe/hOV5A8wWpxckotrTesNMF+1B+nYg/J0QEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "MuniRcmDatabaseStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "DatabaseEndpoint": {
+   "Description": "RDS PostgreSQL database endpoint",
+   "Value": {
+    "Fn::GetAtt": [
+     "MuniRcmDatabase6AE9AE94",
+     "Endpoint.Address"
+    ]
+   },
+   "Export": {
+    "Name": "MuniRcm-DatabaseEndpoint"
+   }
+  },
+  "S3BucketName": {
+   "Description": "S3 bucket for PHI-safe storage",
+   "Value": {
+    "Ref": "MuniRcmDataBucketDCEA00F1"
+   },
+   "Export": {
+    "Name": "MuniRcm-S3Bucket"
+   }
+  },
+  "KmsKeyId": {
+   "Description": "KMS key for encryption",
+   "Value": {
+    "Ref": "MuniRcmEncryptionKey35CCED6D"
+   },
+   "Export": {
+    "Name": "MuniRcm-KmsKey"
+   }
+  },
+  "ExportsOutputFnGetAttMuniRcmDataBucketDCEA00F1Arn2048DE91": {
+   "Value": {
+    "Fn::GetAtt": [
+     "MuniRcmDataBucketDCEA00F1",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "MuniRcmDatabaseStack:ExportsOutputFnGetAttMuniRcmDataBucketDCEA00F1Arn2048DE91"
+   }
+  },
+  "ExportsOutputRefMuniRcmDatabaseSecretAttachment681399145DACB2BF": {
+   "Value": {
+    "Ref": "MuniRcmDatabaseSecretAttachment68139914"
+   },
+   "Export": {
+    "Name": "MuniRcmDatabaseStack:ExportsOutputRefMuniRcmDatabaseSecretAttachment681399145DACB2BF"
+   }
+  },
+  "ExportsOutputFnGetAttMuniRcmDatabase6AE9AE94EndpointAddress9F2465EE": {
+   "Value": {
+    "Fn::GetAtt": [
+     "MuniRcmDatabase6AE9AE94",
+     "Endpoint.Address"
+    ]
+   },
+   "Export": {
+    "Name": "MuniRcmDatabaseStack:ExportsOutputFnGetAttMuniRcmDatabase6AE9AE94EndpointAddress9F2465EE"
+   }
+  },
+  "ExportsOutputRefMuniRcmDataBucketDCEA00F16D2E2186": {
+   "Value": {
+    "Ref": "MuniRcmDataBucketDCEA00F1"
+   },
+   "Export": {
+    "Name": "MuniRcmDatabaseStack:ExportsOutputRefMuniRcmDataBucketDCEA00F16D2E2186"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
